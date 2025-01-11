@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .sidebardisplay{
+        display: none !important;
+    }
+    body {
+        font-family: 'Vazir', sans-serif;
+        background-color: #ffffff; /* Match the site background */
+        color: #333; /* Dark gray text for readability */
+        margin: 0;
+        padding: 0;
+    }
+
+    h2 {
+        text-align: center;
+        color: #000; /* Black for title */
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+    }
+
+    .alert-container {
+        max-width: 800px;
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    .alert {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .alert-success {
+        background-color: #28a745; /* Golden-yellow background */
+        color: black; /* Black text for success */
+    }
+
+    .alert-warning {
+        background-color: #f44336; /* Orange for warnings */
+        color: black;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    .table th, .table td {
+        padding: 12px 15px;
+        border: 1px solid #ddd; /* Subtle border for table cells */
+    }
+
+    .table th {
+        background-color: #FFEB3B; /* Golden-yellow for table header */
+        color: black; /* Black text */
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #f9f9f9; /* Light gray for alternating rows */
+    }
+
+    .table tr:hover {
+        background-color: #f1f1f1; /* Slight highlight on hover */
+    }
+
+    .text-success {
+        color: #28a745; /* Green for success */
+        font-weight: bold;
+    }
+
+    .text-warning {
+        color: #f44336; /* Orange for warning */
+        font-weight: bold;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-success {
+        background-color: #FFEB3B; /* Golden-yellow for success button */
+        color: black; /* Black text */
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: black; /* Black on hover */
+        color: #FFEB3B; /* Golden-yellow text */
+        transform: scale(1.05); /* Slight zoom effect */
+    }
+
+    .btn-danger {
+        background-color: #f44336; /* Red for danger */
+        color: white;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #d32f2f; /* Darker red on hover */
+        transform: scale(1.05); /* Slight zoom effect */
+    }
+
+    p {
+        text-align: center;
+        font-size: 1rem;
+        color: #555; /* Soft gray for empty message */
+        margin-top: 20px;
+    }
+
+    form {
+        display: inline-block;
+        margin: 0 5px;
+    }
+    .center-form {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    margin-top: 20px; /* Add spacing above */
+    text-align: center; /* Ensure text alignment is centered */
+}
+
+.btn-success {
+    background-color: #FFEB3B; /* Golden-yellow for success button */
+    color: black; /* Black text */
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: black; /* Black background on hover */
+    color: #FFEB3B; /* Golden-yellow text */
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+.alert {
+        opacity: 1; /* Initial state: fully visible */
+    }
+</style>
+
+<h2>لیست درخواست‌های کارشناسی</h2>
+
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if expertise_requests %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>عنوان ملک</th>
+                <th>وضعیت درخواست</th>
+                <th>هزینه کارشناسی</th>
+                <th>وضعیت پرداخت</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in expertise_requests %}
+                <tr>
+                    <td>{{ request.property_title }}</td>
+                    <td>{{ request.get_status_display }}</td>
+                    <td>{{ request.expertise_fee }} تومان</td>
+                    <td>
+                        {% if request.is_paid %}
+                            <span class="text-success">پرداخت شده</span>
+                        {% else %}
+                            <span class="text-warning">در انتظار پرداخت</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not request.is_paid %}
+                            <form action="{% url 'requests:pay_expertise_request' request.pk %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">پرداخت هزینه</button>
+                            </form>
+                        {% endif %}
+                        <form action="{% url 'requests:remove_expertise_request' request.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">حذف</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>شما هیچ درخواستی برای کارشناسی ندارید.</p>
+{% endif %}
+<form action="{% url 'requests:request_expertise' %}" method="post" class="center-form">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">ایجاد درخواست جدید</button>
+</form>
+<script>
+    // Wait for the DOM to be fully loaded
+    document.addEventListener("DOMContentLoaded", function () {
+        // Select all alert elements
+        const alerts = document.querySelectorAll(".alert");
+        
+        // Loop through each alert and set a timeout
+        alerts.forEach(alert => {
+            // After 1.5 seconds, start fading out
+            setTimeout(() => {
+                alert.style.transition = "opacity 1.5s ease";
+                alert.style.opacity = "0";
+                
+                // Remove the alert completely after fade-out
+                setTimeout(() => {
+                    alert.style.display = "none";
+                }, 1500); // Matches the fade-out duration
+            }, 1500);
+        });
+    });
+</script>
+{% endblock %}

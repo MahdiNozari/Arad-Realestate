@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}درباره ما - املاک آراد{% endblock %}
+
+{% block content %}
+<div class="about-us-container">
+    <div class="about-header">
+        <h1>درباره ما</h1>
+        <p>به املاک آراد خوش آمدید. بهترین خدمات مشاوره و خرید و فروش املاک در شهر.</p>
+    </div>
+
+    <div class="about-content">
+        <div class="about-info">
+            <h2>اطلاعات تماس</h2>
+            <ul>
+                <li><strong>آدرس:</strong> تهران، خیابان ولیعصر، پلاک 123</li>
+                <li><strong>شماره تماس:</strong> 021-12345678</li>
+                <li><strong>کد پستی:</strong> 1234567890</li>
+                <li><strong>ایمیل:</strong> info@aradrealestate.com</li>
+            </ul>
+        </div>
+
+        <div class="about-gallery">
+            <h2>گالری تصاویر</h2>
+            <div class="gallery">
+                <div class="gallery-item"><img src="{% static 'home/img/s.1.jpg' %}" alt="ملک 1"></div>
+                <div class="gallery-item"><img src="{% static 'home/img/s.2.jpg' %}" alt="ملک 2"></div>
+                <div class="gallery-item"><img src="{% static 'home/img/s.3.jpg' %}" alt="ملک 3"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="about-footer">
+        <h2>چرا املاک آراد؟</h2>
+        <p>
+            املاک آراد با بیش از 10 سال سابقه درخشان در ارائه خدمات ملکی، بهترین گزینه برای خرید و فروش و اجاره املاک شماست. تیم مجرب ما آماده ارائه مشاوره رایگان و راهنمایی به شماست.
+        </p>
+    </div>
+</div>
+
+<script>
+    // اسکریپت برای گالری تصاویر
+    const galleryItems = document.querySelectorAll('.gallery-item img');
+    galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const overlay = document.createElement('div');
+            overlay.classList.add('overlay');
+
+            const enlargedImg = document.createElement('img');
+            enlargedImg.src = item.src;
+            enlargedImg.classList.add('enlarged');
+
+            overlay.appendChild(enlargedImg);
+            document.body.appendChild(overlay);
+
+            overlay.addEventListener('click', () => {
+                document.body.removeChild(overlay);
+            });
+        });
+    });
+</script>
+
+<style>
+    .sidebardisplay{
+        display: none !important;
+    }
+
+    .about-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .about-header h1 {
+        font-size: 2.5rem;
+        color: #FFEB3B;  /* رنگ زرد */
+    }
+
+    .about-header p {
+        font-size: 1.2rem;
+        color: #555;
+    }
+
+    .about-content {
+        display: flex;
+        gap: 20px;
+    }
+
+    .about-info {
+        flex: 1;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-info h2 {
+        margin-bottom: 10px;
+        color: #FFEB3B;  /* رنگ زرد */
+    }
+
+    .about-info ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .about-info ul li {
+        margin-bottom: 10px;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .about-gallery {
+        flex: 1;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-gallery h2 {
+        margin-bottom: 10px;
+        color: #FFEB3B;  /* رنگ زرد */
+    }
+
+    .gallery {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .gallery-item {
+        flex: 1;
+        min-width: 150px;
+        max-width: 200px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 200px; /* ارتفاع یکسان برای همه تصاویر */
+        object-fit: cover; /* تنظیم برش تصویر برای حفظ تناسب */
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    .gallery-item img:hover {
+        transform: scale(1.05);
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .enlarged {
+        max-width: 80%;
+        max-height: 80%;
+        border-radius: 8px;
+    }
+
+    .about-footer {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .about-footer h2 {
+        color: #FFEB3B;  /* رنگ زرد */
+    }
+
+    .about-footer p {
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.6;
+    }
+</style>
+{% endblock %}

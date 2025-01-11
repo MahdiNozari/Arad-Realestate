@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .sidebardisplay{
+        display: none !important;
+    }
+    h2, h3 {
+        text-align: center;
+        color: #000; /* Black for titles */
+        margin-bottom: 20px;
+        font-family: 'Vazir', sans-serif;
+    }
+
+    .ull {
+        list-style-type: none;
+        padding: 0;
+        margin: 20px auto;
+        max-width: 800px;
+    }
+
+    .lii {
+        background-color: #fff; /* White background for list items */
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        padding: 15px;
+        margin-bottom: 15px;
+        font-family: 'Vazir', sans-serif;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .aa{
+        text-decoration: none;
+        background-color: #FFEB3B; /* Golden-yellow button */
+        color: black; /* Black text for contrast */
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .aa:hover {
+        background-color: black; /* Black background on hover */
+        color: #FFEB3B; /* Golden-yellow text */
+        transform: scale(1.05); /* Slight zoom effect */
+    }
+
+    .pp {
+        text-align: center;
+        color: #555; /* Soft gray for no-contract messages */
+        font-family: 'Vazir', sans-serif;
+        margin-top: 20px;
+        font-size: 1rem;
+    }
+
+    .contract-section {
+        margin-bottom: 40px;
+    }
+</style>
+
+<div class="contract-section">
+    <h2>قراردادهای من</h2>
+
+    <h3>به عنوان مالک</h3>
+    {% if contracts_as_owner %}
+        <ul class="ull">
+            {% for contract in contracts_as_owner %}
+                <li class="lii">
+                    <span>قرارداد برای {{ contract.file.title }} با خریدار: {{ contract.buyer_customer.name }}</span>
+                    <a href="{% url 'contracts:contract_detail' contract.serial %}" class="aa">جزئیات</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="pp">شما هیچ قراردادی به عنوان مالک ندارید.</p>
+    {% endif %}
+</div>
+
+<div class="contract-section">
+    <h3>به عنوان خریدار</h3>
+    {% if contracts_as_buyer %}
+        <ul class="ull">
+            {% for contract in contracts_as_buyer %}
+                <li class="lii">
+                    <span>قرارداد برای {{ contract.file.title }} با فروشنده: {{ contract.seller_customer.name }}</span>
+                    <a href="{% url 'contracts:contract_detail' contract.serial %}" class="aa">جزئیات</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="pp">شما هیچ قراردادی به عنوان خریدار ندارید.</p>
+    {% endif %}
+</div>
+{% endblock %}

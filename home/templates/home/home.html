@@ -1,0 +1,923 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- اضافه کردن Font Awesome برای آیکون‌ها -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif; /* استفاده از فونت ایرانی مناسب */
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            background-color: #f0f2f5;
+        }
+        .sidebardisplay {
+            display: none !important;
+        }
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            position: relative;
+            overflow: hidden;
+            background-color:rgba(240, 240, 240, 0.21); /* اضافه کردن پس‌زمینه ملایم */
+        }
+        
+        .filter-container {
+            background: rgba(255, 255, 255, 0.29); /* پس‌زمینه سفید با شفافیت بیشتر */
+            padding: 25px; /* افزایش فضای داخلی */
+            border-radius: 12px; /* گوشه‌های گردتر */
+            max-width: 650px; /* افزایش عرض */
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* سایه ملایم‌تر */
+            backdrop-filter: blur(10px); /* تاری بیشتر برای زیبایی */
+            border: 1px solidrgba(224, 224, 224, 0.52); /* مرز ملایم برای قاب */
+        }
+        
+        .filter-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0; /* برای اطمینان از اینکه تصویر پس‌زمینه در پشت محتوای فیلتر قرار گیرد */
+        }
+        
+        .filter-container h3 {
+            font-size: 1.75rem; /* بزرگ‌تر کردن عنوان */
+            font-weight: 600; /* ایجاد کنتراست بیشتر برای عنوان */
+            color: #333; /* رنگ تیره‌تر برای عنوان */
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px; /* افزایش فاصله بین گروه‌ها */
+        }
+        
+        .filter-group label {
+            font-size: 1.1rem; /* افزایش اندازه متن برای برچسب‌ها */
+            margin-right: 12px;
+            color: #555; /* رنگ ملایم‌تر برای برچسب‌ها */
+        }
+        
+        .filter-container .checkbox-group,
+        .filter-container .radio-group {
+            gap: 15px; /* افزایش فاصله بین چک‌باکس‌ها */
+            justify-content: center;
+        }
+        
+        .filter-container input[type="range"] {
+            height: 6px; /* ضخیم‌تر کردن اسلایدر */
+            background: #ddd; /* رنگ ملایم‌تر برای پس‌زمینه اسلایدر */
+            border-radius: 5px; /* گوشه‌های گرد برای اسلایدر */
+        }
+        
+        .filter-container input[type="range"]::-webkit-slider-thumb {
+            width: 18px; /* بزرگ‌تر کردن دایره اسلایدر */
+            height: 18px;
+            background-color: #007bff; /* تغییر رنگ دایره اسلایدر */
+            border-radius: 50%; /* گرد کردن دایره */
+            cursor: pointer;
+        }
+        
+        .filter-container output {
+            font-size: 1.2rem; /* کمی بزرگ‌تر کردن خروجی */
+            color: #007bff; /* رنگ آبی برای خروجی */
+            font-weight: 500;
+        }
+        
+        .filter-container button {
+            padding: 12px 25px; /* بزرگ‌تر کردن دکمه */
+            font-size: 1.1rem; /* کمی بزرگ‌تر کردن متن دکمه */
+            background-color: #007bff; /* رنگ آبی روشن */
+            color: white; /* رنگ متن دکمه سفید */
+            border-radius: 8px; /* گوشه‌های گردتر */
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .filter-container button:hover {
+            background-color: #0056b3; /* رنگ آبی تیره‌تر هنگام هاور */
+        }
+        
+        .filter-container button:active {
+            background-color: #004085; /* رنگ تیره‌تر هنگام فشردن */
+            transform: scale(0.98); /* افکت فشردن دکمه */
+        }
+        
+
+        .cards-section {
+            background-color: #ffffff;
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap; /* برای حالت ریسپانسیو */
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 40px;
+        }
+
+        .card {
+            width: 170px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-circle {
+            width: 100px;
+            height: 100px;
+            background-color: #76c893; /* رنگ پس‌زمینه دایره */
+            border-radius: 50%;
+            margin: 0 auto;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            color: #333333;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-weight: bold; /* تنظیم وزن فونت برای جذابیت */
+            position: relative; /* برای خط زیر عنوان */
+        }
+    
+        .card h3::after {
+            content: "";
+            display: block;
+            width: 50px; /* طول خط */
+            height: 3px; /* ضخامت خط */
+            background-color: #007bff; /* رنگ خط */
+            margin: 5px auto 0; /* فاصله از متن و مرکز کردن خط */
+        }
+    
+        .card a {
+            display: inline-block;
+            font-size: 1rem; /* افزایش کمی اندازه فونت */
+            font-weight: bold; /* بولد کردن متن */
+            color:rgb(255, 255, 255);
+            background-color:rgba(0, 136, 255, 0.78); /* تغییر رنگ به زرد */
+            border: none; /* حذف مرز */
+            padding: 10px 15px; /* افزایش فضای داخلی */
+            border-radius: 4px;
+            letter-spacing: 1px; /* فاصله بین حروف */
+            text-decoration: none; /* حذف خط زیر متن */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* سایه متن برای جلب توجه */
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+        }
+    
+        .card a:hover {
+            background-color: #e0a800; /* رنگ زرد تیره‌تر برای هاور */
+            color: #ffffff;
+            transform: scale(1.05); /* بزرگ‌تر شدن کلید هنگام هاور */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* افزایش سایه هنگام هاور */
+        }
+    
+        .card p {
+            font-size: 0.9rem;
+            color: #555555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-family: 'Vazir', sans-serif; /* استفاده از فونت مناسب فارسی */
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .news-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px; /* بزرگ‌تر کردن تیتر بخش */
+            font-weight: bold;
+            position: relative;
+        }
+
+        .news-section h2::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background:rgb(255, 255, 255);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .news-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .news-card {
+            width: 22%; /* کارت‌ها کوچک‌تر شده‌اند */
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .news-card:hover {
+            transform: scale(1.05);
+        }
+
+        .news-card img {
+            width: 100%;
+            height: 120px; /* کاهش ارتفاع تصویر */
+            object-fit: cover;
+        }
+
+        .news-card h3 {
+            font-size: 16px; /* بزرگ‌تر کردن تیتر خبر */
+            margin: 10px;
+            color: #333;
+            font-weight: bold; /* بولد کردن تیتر */
+            font-family: 'Vazir'
+        }
+
+        .news-card p {
+            font-size: 13px; /* کمی بزرگ‌تر کردن متن توضیحات */
+            color: #555;
+            padding: 0 10px;
+            line-height: 1.5;
+            font-family: 'Vazir'
+        }
+
+        .news-card a {
+            display: inline-block;
+            font-size: 14px; /* بهبود اندازه فونت */
+            color: #fff;
+            background: #007bff; /* رنگ آبی دکمه */
+            text-decoration: none;
+            margin: 10px auto;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background 0.3s;
+            font-family: 'Vazir'
+        }
+
+        .news-card a:hover {
+            background: #0056b3;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .card-wrapper {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: nowrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 260px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-box img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        .card-heading {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .card-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding: 16px;
+            background: #f1f1f1;
+            text-align: center;
+        }
+
+        .card-footer a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .card-footer a:hover {
+            text-decoration: underline;
+        }
+        .info-section {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            margin: 40px auto;
+            max-width: 1200px;
+        }
+        
+        .info-card {
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .info-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .info-title::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: #003366;
+            margin: 10px auto 0;
+        }
+        
+        .info-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #555;
+            margin-top: 10px;
+        }
+        .info-section {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-top: 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .info-card {
+            text-align: center;
+            max-width: 500px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .info-title::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: #003366;
+            margin: 10px auto 0;
+        }
+
+        .info-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #555;
+            margin-top: 10px;
+        }
+        .slider {
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .navigation {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        
+        .nav-btn {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px; /* اندازه فلش */
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        /* اندازه آیکون‌ها */
+        .nav-btn i {
+            font-size: 20px; /* اندازه آیکون */
+        }
+        
+        /* اندازه فلش‌ها */
+        .nav-btn.prev {
+            font-size: 24px; /* اندازه فلش سمت چپ */
+        }
+        
+        .nav-btn.next {
+            font-size: 24px; /* اندازه فلش سمت راست */
+        }
+        /* استایل برای دکمه جستجو روی نقشه */
+        .map-button {
+            display: inline-block;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white; /* رنگ متن */
+            background-color: #28a745; /* رنگ سبز برای دکمه */
+            border: none;
+            border-radius: 5px; /* گوشه‌های گرد */
+            text-decoration: none; /* حذف خط زیر متن */
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* انیمیشن برای هاور */
+        }
+
+        /* تغییر رنگ در هنگام هاور روی دکمه */
+        .map-button:hover {
+            background-color: #218838; /* رنگ سبز تیره‌تر */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* سایه بیشتر */
+        }
+
+        /* تغییر حالت دکمه هنگام کلیک */
+        .map-button:active {
+            background-color: #1e7e34; /* رنگ سبز تیره‌تر هنگام کلیک */
+            box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2); /* اثر فشار کلیک */
+        }
+        
+
+        
+    </style>
+</head>
+<body>
+    
+    <div class="filter-section">
+        <img class="filter-image" src="{% static 'home/img/background.jpg' %}" alt="Background Image">
+        <div class="filter-container">
+            <h3>جستجوی ملک مورد نظر شما</h3>
+            <form method="get" action="{% url 'home:property-list' %}">
+                <!-- نوع معامله (اجاره یا خرید) -->
+                <label>
+                    نوع معامله:
+                    <select id="transaction-type" name="is_rent">
+                        <option value="" {% if request.GET.is_rent == "" %}selected{% endif %}>انتخاب کنید</option>
+                        <option value="true" {% if request.GET.is_rent == "true" %}selected{% endif %}>اجاره</option>
+                        <option value="false" {% if request.GET.is_rent == "false" %}selected{% endif %}>خرید</option>
+                    </select>
+                </label>
+            
+                <!-- فیلدهای اجاره -->
+                <div id="rent-fields" style="display: none;">
+                    <label>
+                        پیش‌پرداخت:
+                        <input type="number" name="prepayment" placeholder="مقدار پیش‌پرداخت" value="{{ request.GET.prepayment }}">
+                    </label>
+                    <label>
+                        اجاره:
+                        <input type="number" name="rent" placeholder="مقدار اجاره" value="{{ request.GET.rent }}">
+                    </label>
+                </div>
+            
+                <!-- فیلد قیمت کل -->
+                <div id="sale-fields" style="display: none;">
+                    <label>
+                        قیمت کل:
+                        <input type="number" name="price" placeholder="مقدار قیمت کل" value="{{ request.GET.price }}">
+                    </label>
+                </div>
+            
+                <!-- سایر فیلترها -->
+                 <p>
+                <label>
+                    سال ساخت : 
+                    <input type="number" name="year" placeholder="سال" value="{{ request.GET.year }}">
+                </label>
+                 </p>    
+
+                <label>
+                    متراژ      
+                    <input type="number" name="area" placeholder="متراژ" value="{{ request.GET.area }}">
+                </label>
+            
+                <label>
+                    
+                    انتخاب نوع ملک: 
+                    <select name="property_type">
+                        <option value="" {% if request.GET.property_type == "" %}selected{% endif %}>انتخاب کنید</option>
+                        <option value="apartment" {% if request.GET.property_type == "apartment" %}selected{% endif %}>آپارتمان</option>
+                        <option value="villa" {% if request.GET.property_type == "villa" %}selected{% endif %}>ویلا</option>
+                        <option value="store" {% if request.GET.property_type == "store" %}selected{% endif %}>مغازه</option>
+                        <option value="garden" {% if request.GET.property_type == "garden" %}selected{% endif %}>باغ</option>
+                        <option value="land" {% if request.GET.property_type == "land" %}selected{% endif %}>زمین</option>
+                    </select>
+                </label>
+            
+                <button class="map-button" type="submit">جستجو</button>
+            </form>
+            <div>
+                <a href="{% url 'home:property-map' %}" class="map-button">جستجو روی نقشه</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards Section -->
+    <div class="cards-section">
+        <h2>املاک</h2>
+        <div class="container">
+            <div class="cards-container">
+                <!-- کارت آپارتمان -->
+                <div class="card">
+                    <div class="card-circle">
+                        <img src="{% static 'home/img/apart.jpg' %}" alt="آپارتمان">
+                    </div>
+                    <h3>آپارتمان</h3>
+                    <p>بهترین پیشنهادات آپارتمان برای خرید و اجاره در مناطق مختلف.</p>
+                    <a href="{% url 'home:apartment-list' %}">مشاهده آپارتمان‌ها</a>
+                </div>
+        
+                <!-- کارت ویلا -->
+                <div class="card">
+                    <div class="card-circle">
+                        <img src="{% static 'home/img/villaa.jpg' %}" alt="ویلا">
+                    </div>
+                    <h3>ویلا</h3>
+                    <p>ویلاهای لوکس و زیبا در بهترین مناطق برای خرید یا اجاره.</p>
+                    <a href="{% url 'home:villa-list' %}">مشاهده ویلاها</a>
+                </div>
+        
+                <!-- کارت مغازه -->
+                <div class="card">
+                    <div class="card-circle">
+                        <img src="{% static 'home/img/sam.jpg' %}" alt="مغازه">
+                    </div>
+                    <h3>مغازه</h3>
+                    <p>پیشنهادات عالی برای خرید و اجاره مغازه در نقاط مختلف شهر.</p>
+                    <a href="{% url 'home:store-list' %}">مشاهده مغازه‌ها</a>
+                </div>
+        
+                <!-- کارت باغ -->
+                <div class="card">
+                    <div class="card-circle">
+                        <img src="{% static 'home/img/garden.jpg' %}" alt="باغ">
+                    </div>
+                    <h3>باغ</h3>
+                    <p>خرید و اجاره باغ‌های بزرگ و زیبا با امکانات کامل.</p>
+                    <a href="{% url 'home:garden-list' %}">مشاهده باغ‌ها</a>
+                </div>
+        
+                <!-- کارت زمین -->
+                <div class="card">
+                    <div class="card-circle">
+                        <img src="{% static 'home/img/land.jpg' %}" alt="Land">
+                    </div>
+                    <h3>زمین</h3>
+                    <p>پیشنهادات ویژه برای خرید زمین در مناطق مختلف.</p>
+                    <a href="{% url 'home:land-list' %}">مشاهده زمین‌ها</a>
+                </div>
+            </div>
+    </div>
+    <div class="slider">
+        <div class="slides">
+            <!-- Slide 1 -->
+            <div class="slide">
+                {% if not request.user.is_staff %}
+                <a href="{% url 'home:add-apartment' %}">
+                {% endif %}
+                    <img src="{% static 'home/img/sl1.jpg' %}" alt="Slide 1">
+                </a>
+            </div>
+            <!-- Slide 2 -->
+            <div class="slide">
+                {% if not request.user.is_staff %}
+                <a href="{% url 'requests:request_expertise' %}">
+                {% endif %}
+                    <img src="{% static 'home/img/sl2.jpg' %}" alt="Slide 2">
+                </a>
+            </div>
+        </div>
+        <!-- Navigation Buttons -->
+        <div class="navigation">
+            <button class="nav-btn prev">
+                <i class="fas fa-chevron-left"></i> <!-- فلش چپ Font Awesome -->
+            </button>
+            <button class="nav-btn next">
+                <i class="fas fa-chevron-right"></i> <!-- فلش راست Font Awesome -->
+            </button>
+        </div>
+    </div>
+    
+    
+    <div class="news-section">
+        <h2>وبلاگ</h2>
+        <div class="news-container">
+            <div class="news-card">
+                <img src="{% static 'home/img/news4.jpg' %}" >
+                <h3>تبدیل ملک مسکونی به تجاری</h3>
+                <p>تبدیل ملک مسکونی به تجاری یکی از موضوعات جذاب و پردرخواست در حوزه املاک است...</p>
+                <a href="{% url 'home:news2' %}">بیشتر بخوانید</a>
+            </div>
+            <div class="news-card">
+                <img src="{% static 'home/img/news1.jpg' %}" >
+                <h3>مالیات خانه‌های خالی</h3>
+                <p>مالیات بر خانه‌های خالی یکی از ابزارهای قانونی مهم است که با هدف مدیریت بازار مسکن طراحی شده است...</p>
+                <a href="{% url 'home:news1' %}">بیشتر بخوانید</a>
+            </div>
+            <div class="news-card">
+                <img src="{% static 'home/img/news2.jpg' %}" >
+                <h3>ثبت نام در طرح مسکن ملی</h3>
+                <p>در سال ۱۴۰۳، ثبت نام در طرح مسکن ملی با شرایط جدید و تسهیلات متنوع آغاز شده است...</p>
+                <a href="{% url 'home:news3' %}">بیشتر بخوانید</a>
+            </div>
+            <div class="news-card">
+                <img src="{% static 'home/img/news3.jpg' %}" >
+                <h3>قوانین تغییر کاربری ملک</h3>
+                <p>قوانین تغییر کاربری ملک در سال ۱۴۰۳ شامل مواردی است که باید از آن‌ها آگاهی داشته باشید...</p>
+                <a href="{% url 'home:news4' %}">بیشتر بخوانید</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-section">
+        <div class="info-wrapper">
+            <div class="info-card">
+                <h3 class="info-title">آراد، قوی‌ترین موتور جستجو املاک و مستغلات</h3>
+                <p class="info-text">
+                    آراد با سال‌ها تجربه در امور املاک و شناخت بازار مسکن اقدام به جمع‌آوری کامل‌ترین فایل‌های خرید و فروش، رهن و اجاره خانه، آپارتمان و... نموده است.
+                </p>
+            </div>
+            <div class="info-card">
+                <h3 class="info-title">سامانه هوشمند خرید و فروش، رهن و اجاره</h3>
+                <p class="info-text">
+                    در جدیدترین ویژگی‌های این سامانه می‌توان به جستجوی پیشرفته و حرفه‌ای، آنالیز قیمت املاک، شاخص قیمت مسکن، طیف پیشنهادهای مورد جستجوی شما و... اشاره نمود.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="title">آشنایی با محله‌های مختلف</div>
+    <div class="card-wrapper">
+        <div class="card-box">
+            <img src="{% static "home/img/n1.jpg" %}" alt="Card Image">
+            <div class="card-body">
+                <h3 class="card-heading">محله الهیه </h3>
+                <p class="card-text">لوکس ترین محله پایتخت را بیشتر بشناسید...</p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'home:elahiye' %}">ادامه مطلب</a>
+            </div>
+        </div>
+
+        <div class="card-box">
+            <img src="{% static "home/img/n3.jpg" %}" alt="Card Image">
+            <div class="card-body">
+                <h3 class="card-heading">شهرک غرب</h3>
+                <p class="card-text">شهرک غرب تهران یکی از مناطق معروف شهر تهران است که در این مقاله قصد داریم شما را با آن آشنا کنیم...</p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'home:west' %}">ادامه مطلب</a>
+            </div>
+        </div>
+
+        <div class="card-box">
+            <img src="{% static "home/img/n4.jpg" %}" alt="Card Image">
+            <div class="card-body">
+                <h3 class="card-heading">محله تهرانپارس</h3>
+                <p class="card-text">در این مقاله شما را با محله سرشناس تهرانپارس از امکانات رفاهی گرفته تا قیمت آشنا خواهیم کرد...</p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'home:pars' %}">ادامه مطلب</a>
+            </div>
+        </div>
+
+        <div class="card-box">
+            <img src="{% static "home/img/n2.jpg" %}" alt="Card Image">
+            <div class="card-body">
+                <h3 class="card-heading">شهرک اکباتان</h3>
+                <p class="card-text">این شهرک به واسطه شرکت آمریکایی در دهه ۴۰ ساخته شد و یکی از بزرگ‌ترین مجتمع‌های تهران است...</p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'home:ekbatan' %}">ادامه مطلب</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // برای تبدیل سال میلادی به شمسی
+        const yearSlider = document.getElementById('year');
+        const yearOutput = document.getElementById('year-output');
+        
+        yearSlider.addEventListener('input', function() {
+            const yearMiladi = parseInt(this.value);
+            const yearShamsi = yearMiladi - 622 + 1; // تبدیل به سال شمسی
+            yearOutput.textContent = yearShamsi;
+        });
+
+        // تبدیل قیمت به فرمت مناسب
+        const priceSlider = document.getElementById('price');
+        const priceOutput = priceSlider.nextElementSibling;
+        
+        priceSlider.addEventListener('input', function() {
+            const price = parseInt(this.value);
+            priceOutput.textContent = price.toLocaleString();
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const transactionTypeSelect = document.getElementById('transaction-type');
+            const rentFields = document.getElementById('rent-fields');
+            const saleFields = document.getElementById('sale-fields');
+    
+            // کنترل تغییر نوع معامله
+            transactionTypeSelect.addEventListener('change', function () {
+                const selectedValue = transactionTypeSelect.value;
+    
+                if (selectedValue === 'true') {
+                    // نمایش فیلدهای اجاره
+                    rentFields.style.display = 'block';
+                    saleFields.style.display = 'none';
+                } else if (selectedValue === 'false') {
+                    // نمایش فیلد قیمت کل
+                    saleFields.style.display = 'block';
+                    rentFields.style.display = 'none';
+                } else {
+                    // اگر هیچ گزینه‌ای انتخاب نشده باشد
+                    rentFields.style.display = 'none';
+                    saleFields.style.display = 'none';
+                }
+            });
+    
+            // مقدار اولیه فرم را بررسی و تنظیم کنید
+            const initialValue = transactionTypeSelect.value;
+            if (initialValue === 'true') {
+                rentFields.style.display = 'block';
+            } else if (initialValue === 'false') {
+                saleFields.style.display = 'block';
+            }
+        });
+        const slides = document.querySelector('.slides');
+        const slide = document.querySelectorAll('.slide');
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+
+        let currentIndex = 0;
+
+        // Move to the next slide
+        function moveToNextSlide() {
+            if (currentIndex < slide.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            updateSliderPosition();
+        }
+
+        // Move to the previous slide
+        function moveToPrevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = slide.length - 1;
+            }
+            updateSliderPosition();
+        }
+
+        // Update slider position
+        function updateSliderPosition() {
+            slides.style.transform = `translateX(${currentIndex * 100}%)`;
+        }
+
+        // Event listeners
+        nextBtn.addEventListener('click', moveToNextSlide);
+        prevBtn.addEventListener('click', moveToPrevSlide);
+
+        // Auto slide
+        setInterval(moveToNextSlide, 5000);
+    </script>
+</body>
+</html>
+{% endblock %}
+

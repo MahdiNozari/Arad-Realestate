@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <style>
+        /* استایل عمومی */
+        
+        .sidebardisplay{
+            display: none !important;
+        }
+        .verify-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-control {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-control label {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-control input {
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .form-control input:focus {
+            border-color: #FFEB3B;
+            outline: none;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #FFEB3B;
+            color: #000;
+        }
+
+        .messages {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #000;
+            color: #FFC107;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1rem;
+            display: none;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="verify-container" style="margin-left: auto; margin-right: auto;">
+        <h3>تأیید کد ثبت‌نام</h3>
+        <form method="post" action="{% url 'accounts:verify_code' %}">
+            {% csrf_token %}
+            <div class="form-control">
+                {{ form.as_p }}
+            </div>
+            <button type="submit">ارسال</button>
+        </form>
+
+        <!-- پیام‌ها -->
+        <div class="messages" id="messageBox">
+            {% include 'inc/messages.html' %}
+        </div>
+    </div>
+
+    <script>
+        function handleMessages() {
+            const messageBox = document.getElementById('messageBox');
+            
+            // Check if there's a message (using your backend logic)
+            if (messageBox && messageBox.innerHTML.trim() !== '') {
+                // Show the message box
+                messageBox.style.display = 'block';
+                
+                // Hide it after 5 seconds
+                setTimeout(() => {
+                    messageBox.style.opacity = '0'; // Fade out
+                    setTimeout(() => {
+                        messageBox.style.display = 'none'; // Remove from view after fade out
+                    }, 500); // Match fade-out duration
+                }, 1500);
+            }
+        }
+
+        // Run the function when the page loads
+        window.onload = handleMessages;
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .sidebardisplay{
+        display: none !important;
+    }
+    h2, h3 {
+        text-align: center;
+        color: #000; /* Black for headings */
+        margin-bottom: 20px;
+        font-family: 'Vazir', sans-serif;
+    }
+
+    p {
+        font-size: 1rem;
+        color: #333; /* Dark gray for better readability */
+        line-height: 1.6;
+        margin-bottom: 15px;
+        font-family: 'Vazir', sans-serif;
+    }
+
+    p strong {
+        color: #000; /* Black for labels */
+    }
+
+    img {
+        display: block;
+        margin: 20px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for images */
+    }
+
+    .btn-secondary {
+        display: block;
+        max-width: 200px;
+        margin: 30px auto;
+        text-align: center;
+        padding: 10px 20px;
+        background-color: #FFEB3B; /* Golden-yellow button */
+        color: black; /* Black text */
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background-color: black; /* Black background on hover */
+        color: #FFEB3B; /* Golden-yellow text */
+        transform: scale(1.05); /* Slight zoom effect */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    }
+
+    .contract-details {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    .contract-section {
+        margin-bottom: 40px;
+    }
+</style>
+
+<div class="contract-details">
+    <h2>جزئیات قرارداد</h2>
+
+    <div class="contract-section">
+        <h3>اطلاعات قرارداد</h3>
+        <p><strong>ملک:</strong> {{ contract.file.title }}</p>
+        <p><strong>فروشنده:</strong> {{ contract.seller_customer.name }}</p>
+        <p><strong>خریدار:</strong> {{ contract.buyer_customer.username }}</p>
+        <p><strong>مبلغ قرارداد:</strong> {{ contract.price }} تومان</p>
+        <p><strong>تاریخ قرارداد:</strong> {{ contract.date }}</p>
+    </div>
+
+    {% if contract.image %}
+        <div class="contract-section">
+            <h3>تصویر قرارداد</h3>
+            <img src="{{ contract.image.url }}" alt="Contract Image" style="max-width: 100%; height: auto;">
+        </div>
+    {% endif %}
+
+    <div class="contract-section">
+        <h3>اطلاعات ملک</h3>
+        <img src="{{ contract.file.image.url }}" alt="{{ contract.file.title }}" style="max-width: 100%; height: auto;">
+        <p><strong>آدرس:</strong> {{ contract.file.location }}</p>
+        <p><strong>قیمت ملک:</strong> {{ contract.file.price }} تومان</p>
+    </div>
+
+    <a href="{% url 'contracts:my_contracts' %}" class="btn btn-secondary">بازگشت</a>
+</div>
+{% endblock %}

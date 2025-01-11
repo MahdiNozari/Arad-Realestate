@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <style>
+        .sidebardisplay {
+            display: none !important;
+        }
+
+       
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            color: #555;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #e53935;
+        }
+
+        .btn-view {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background-color: #007bb5;
+        }
+
+        .messages {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #000;
+            color: #FFC107;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1rem;
+            display: none;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* برای موبایل و صفحه‌های کوچکتر */
+        @media (max-width: 768px) {
+            table th, table td {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>مدیریت درخواست‌های کارشناسی</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>عنوان ملک</th>
+                    <th>نوع ملک</th>
+                    <th>وضعیت</th>
+                    <th>کارشناس</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                    <tr>
+                        <td>{{ request.property_title }}</td>
+                        <td>{{ request.property_type }}</td>
+                        <td>{{ request.status }}</td>
+                        <td>{% if request.expert_assigned %}{{ request.expert_assigned.name }}{% else %}ندارد{% endif %}</td>
+                        <td>
+                            {% if request.expert_assigned == user %}
+                                <a href="{% url 'requests:cancel_expertise_request' expertise_request_id=request.id %}" class="btn btn-danger">لغو انتخاب</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- پیام‌ها -->
+        <div class="messages" id="messageBox">
+            {% include 'inc/messages.html' %}
+        </div>
+    </div>
+
+    <script>
+        function handleMessages() {
+            const messageBox = document.getElementById('messageBox');
+            
+            // Check if there's a message (using your backend logic)
+            if (messageBox && messageBox.innerHTML.trim() !== '') {
+                // Show the message box
+                messageBox.style.display = 'block';
+                
+                // Hide it after 5 seconds
+                setTimeout(() => {
+                    messageBox.style.opacity = '0'; // Fade out
+                    setTimeout(() => {
+                        messageBox.style.display = 'none'; // Remove from view after fade out
+                    }, 500); // Match fade-out duration
+                }, 1500);
+            }
+        }
+
+        // Run the function when the page loads
+        window.onload = handleMessages;
+    </script>
+</body>
+</html>
+{% endblock %}

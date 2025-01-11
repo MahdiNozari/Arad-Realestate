@@ -1,0 +1,177 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تبدیل ملک مسکونی به تجاری</title>
+    <style>
+        body {
+            font-family: 'IRANSans', Arial, sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .sidebardisplay {
+            display: none !important;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            position: relative;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .date-card {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #2e84dc;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .date-card .day {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin: 20px 0;
+        }
+        h2 {
+            font-size: 20px;
+            color: #2e84dc;
+            margin-top: 20px;
+        }
+        p {
+            color: #555;
+            text-align: justify;
+        }
+        ul {
+            list-style: disc inside;
+            color: #555;
+            margin: 10px 0 10px 20px;
+        }
+        a {
+            color: #dc3545;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+        }
+        .highlight {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="date-card">
+                <span class="day"></span>
+                <br>
+                <span class="year"></span>
+            </div>
+            <img src="{% static 'home/img/news2.jpg' %}">
+        </div>
+
+        <h1>ثبت نام جدید طرح مسکن ملی در سال 1403</h1>
+
+        <p>در سال 1403، ثبت نام در طرح مسکن ملی با تغییرات جدید، شرایط مشخصی را برای متقاضیان اعمال می کند. که شامل الزامات سنی، سابقه سکونت و مدارک لازم برای ثبت نام است...</p>
+
+        <h2>شرایط ثبت‌نام در طرح مسکن ملی</h2>
+            <p>برای ثبت‌نام در این طرح، شرایط زیر الزامی است:</p>
+            <ul>
+                <li>عدم مالکیت مسکن در 5 سال گذشته</li>
+                <li>متأهل یا سرپرست خانواده بودن</li>
+                <li>داشتن حداقل 5 سال سابقه سکونت در شهر مورد تقاضا</li>
+                <li>عدم دریافت تسهیلات دولتی مسکن</li>
+            </ul>
+
+            <h2>مزایا و اهداف طرح</h2>
+            <p>این طرح با هدف کاهش مشکلات مسکن و افزایش توان خرید خانواده‌ها طراحی شده است. از مهم‌ترین مزایای این طرح می‌توان به موارد زیر اشاره کرد:</p>
+            <ul>
+                <li>تسهیلات و وام‌های با بهره کم</li>
+                <li>اولویت برای اقشار کم‌درآمد</li>
+                <li>تحویل سریع واحدهای مسکونی</li>
+            </ul>
+
+        <div class="image">
+            <img src={% static 'home/img/news222.jpg' %} >
+        </div>
+
+        <h2>مراحل ثبت‌نام</h2>
+            <p>ثبت‌نام در طرح مسکن ملی به صورت آنلاین و از طریق سامانه ملی مسکن انجام می‌شود. مراحل ثبت‌نام شامل موارد زیر است:</p>
+            <ol>
+                <li>ورود به سامانه ملی مسکن</li>
+                <li>ایجاد حساب کاربری</li>
+                <li>تکمیل اطلاعات فردی و خانوادگی</li>
+                <li>بارگذاری مدارک لازم</li>
+                <li>تأیید نهایی و دریافت کد رهگیری</li>
+            </ol>
+    </div>
+    <script>
+        // تابع محاسبه تاریخ شمسی
+        function toJalali(gy, gm, gd) {
+            let g_d_m = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            let jy, jm, jd;
+            if (gy > 1600) {
+                jy = 979;
+                gy -= 1600;
+            } else {
+                jy = 0;
+                gy -= 621;
+            }
+            let gy2 = (gm > 2) ? (gy + 1) : gy;
+            let days = (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) - 80 + gd + g_d_m.slice(0, gm).reduce((a, b) => a + b, 0);
+            jy += 33 * Math.floor(days / 12053);
+            days %= 12053;
+            jy += 4 * Math.floor(days / 1461);
+            days %= 1461;
+            jy += Math.floor((days - 1) / 365);
+            if (days > 365) days = (days - 1) % 365;
+            if (days < 186) {
+                jm = 1 + Math.floor(days / 31);
+                jd = 1 + (days % 31);
+            } else {
+                jm = 7 + Math.floor((days - 186) / 30);
+                jd = 1 + ((days - 186) % 30);
+            }
+            return { jy, jm, jd };
+        }
+
+        // تنظیم تاریخ
+        const today = new Date();
+        const { jy, jm, jd } = toJalali(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+
+        document.querySelector('.day').textContent = `${jd}`;
+        document.querySelector('.year').textContent = `${months[jm - 1]} ${jy}`;
+    </script>
+</body>
+</html>

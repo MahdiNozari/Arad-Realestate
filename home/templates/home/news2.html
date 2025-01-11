@@ -1,0 +1,184 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تبدیل ملک مسکونی به تجاری</title>
+    <style>
+        body {
+            font-family: 'IRANSans', Arial, sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .sidebardisplay {
+            display: none !important;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            position: relative;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .date-card {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #2e84dc;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .date-card .day {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin: 20px 0;
+        }
+        h2 {
+            font-size: 20px;
+            color: #2e84dc;
+            margin-top: 20px;
+        }
+        p {
+            color: #555;
+            text-align: justify;
+        }
+        ul {
+            list-style: disc inside;
+            color: #555;
+            margin: 10px 0 10px 20px;
+        }
+        a {
+            color: #dc3545;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+        }
+        .highlight {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="date-card">
+                <span class="day"></span>
+                <br>
+                <span class="year"></span>
+            </div>
+            <img src="{% static 'home/img/news4.jpg' %}">
+        </div>
+
+        <h1>تبدیل ملک مسکونی به تجاری (مراحل و هزینه‌ها)</h1>
+
+        <p>تبدیل ملک مسکونی به تجاری یکی از فرآیندهای پرطرفدار در حوزه املاک است که معمولاً با هدف افزایش ارزش ملک یا استفاده از آن برای فعالیت‌های تجاری انجام می‌شود.</p>
+
+        <div class="image">
+            <img src="{% static 'home/img/news22.jpg' %}" alt="تبدیل ملک مسکونی به تجاری">
+        </div>
+
+        <h2>مراحل دریافت مجوز تغییر کاربری</h2>
+        <ul>
+            <li>ثبت درخواست در شهرداری.</li>
+            <li>ارائه مدارک مالکیت و مدارک مرتبط.</li>
+            <li>پرداخت هزینه‌های مربوطه.</li>
+            <li>انتظار برای تایید نهایی و دریافت مجوز.</li>
+        </ul>
+
+        <h2>هزینه‌های مربوط به تبدیل ملک مسکونی به تجاری</h2>
+        <p>هزینه‌های تبدیل شامل هزینه‌های قانونی، کارشناسی و عوارض تغییر کاربری است. این هزینه‌ها ممکن است بسته به شهر و منطقه متفاوت باشد.</p>
+
+        <div class="image">
+            <img src="placeholder-costs-image.png" alt="هزینه‌های تبدیل ملک">
+        </div>
+
+        <h2>مدارک مورد نیاز</h2>
+        <ul>
+            <li>اصل و کپی سند مالکیت.</li>
+            <li>کپی شناسنامه و کارت ملی مالک.</li>
+            <li>نقشه ساختمان.</li>
+            <li>مدارک مربوط به پرداخت عوارض.</li>
+        </ul>
+
+        <h2 class="highlight">سوالات متداول</h2>
+        <h3>آیا برای تبدیل ملک به تجاری نیاز به تایید همسایگان است؟</h3>
+        <p class="info">بله، معمولاً تایید همسایگان یکی از شروط مهم است.</p>
+
+        <h3>چقدر زمان می‌برد تا مجوز تغییر کاربری صادر شود؟</h3>
+        <p>این زمان بسته به شهرداری محل و مدارک شما متفاوت است، اما معمولاً بین یک تا سه ماه زمان می‌برد.</p>
+
+        <h2>جمع‌بندی</h2>
+        <p>با رعایت مراحل ذکر شده و تهیه مدارک لازم می‌توانید ملک مسکونی خود را به تجاری تبدیل کرده و از مزایای آن بهره‌مند شوید.</p>
+
+    </div>
+    <script>
+        // تابع محاسبه تاریخ شمسی
+        function toJalali(gy, gm, gd) {
+            let g_d_m = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            let jy, jm, jd;
+            if (gy > 1600) {
+                jy = 979;
+                gy -= 1600;
+            } else {
+                jy = 0;
+                gy -= 621;
+            }
+            let gy2 = (gm > 2) ? (gy + 1) : gy;
+            let days = (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) - 80 + gd + g_d_m.slice(0, gm).reduce((a, b) => a + b, 0);
+            jy += 33 * Math.floor(days / 12053);
+            days %= 12053;
+            jy += 4 * Math.floor(days / 1461);
+            days %= 1461;
+            jy += Math.floor((days - 1) / 365);
+            if (days > 365) days = (days - 1) % 365;
+            if (days < 186) {
+                jm = 1 + Math.floor(days / 31);
+                jd = 1 + (days % 31);
+            } else {
+                jm = 7 + Math.floor((days - 186) / 30);
+                jd = 1 + ((days - 186) % 30);
+            }
+            return { jy, jm, jd };
+        }
+
+        // تنظیم تاریخ
+        const today = new Date();
+        const { jy, jm, jd } = toJalali(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+
+        document.querySelector('.day').textContent = `${jd}`;
+        document.querySelector('.year').textContent = `${months[jm - 1]} ${jy}`;
+    </script>
+</body>
+</html>

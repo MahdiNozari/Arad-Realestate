@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .sidebardisplay {
+        display: none !important;
+    
+    }
+</style>
+<h1>جزئیات قرارداد</h1>
+
+<p><strong>عنوان قرارداد:</strong> {{ contract.title }}</p>
+<p><strong>ملک:</strong> {{ contract.file.title }}</p>
+<p><strong>فروشنده:</strong> {{ contract.seller_customer.name }}</p>
+<p><strong>خریدار:</strong> {{ contract.buyer_customer.name }}</p>
+<p><strong>ایجنت:</strong> {{ contract.agent.name }}</p>
+<p><strong>درصد کارمزد:</strong> {{ contract.percent }}%</p>
+<p><strong>قیمت:</strong> {{ contract.price }} تومان</p>
+<p><strong>تاریخ:</strong> {{ contract.date }}</p>
+<p><strong>اعتبار قرارداد:</strong> {{ contract.credit }}</p>
+<img src="{{ contract.image.url }}" alt="تصویر قرارداد" style="max-width: 100%; height: auto;">
+
+<a href="{% url 'contracts:agent_contracts' %}" class="btn btn-primary">بازگشت</a>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <style>
+        /* استایل صفحه لاگین */
+        /* body {
+            font-family: 'Vazir', sans-serif !important;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        } */
+        .sidebardisplay{
+            display: none !important;
+        }
+        .login-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-control {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-control label {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-control input {
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .form-control input:focus {
+            border-color: #FFEB3B;
+            outline: none;
+        }
+
+        .btn-submit {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #FFEB3B;
+            color: #000;
+        }
+
+        .messages {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #000;
+            color: #FFC107;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1rem;
+            display: none;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="login-container" style="margin-right: auto; margin-left: auto;">
+        <h2>صفحه ورود</h2>
+        <form action="" method="post" class="col-md-6" novalidate>
+            {% csrf_token %}
+            <div class="form-control">
+                {{ form.as_p }}
+            </div>
+            <input type="submit" class="btn-submit" value="ورود">
+        </form>
+
+        <!-- پیام‌ها -->
+        <div class="messages" id="messageBox">
+            {% include 'inc/messages.html' %}
+        </div>
+    </div>
+
+    <script>
+        function handleMessages() {
+            const messageBox = document.getElementById('messageBox');
+
+            // اگر پیام موجود باشد، آن را نمایش بده
+            if (messageBox && messageBox.innerHTML.trim() !== '') {
+                messageBox.style.display = 'block';
+
+                // بعد از 1.5 ثانیه پیام را محو کرده و بعد از 0.5 ثانیه آن را مخفی می‌کنیم
+                setTimeout(() => {
+                    messageBox.style.opacity = '0';
+                    setTimeout(() => {
+                        messageBox.style.display = 'none';
+                    }, 500);
+                }, 1500);
+            }
+        }
+
+        // اجرا هنگام بارگذاری صفحه
+        window.onload = handleMessages;
+    </script>
+</body>
+</html>
+{% endblock %}

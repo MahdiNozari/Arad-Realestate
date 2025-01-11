@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .property-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        max-width: 1200px;
+        margin: 50px auto;
+        gap: 30px;
+    }
+
+    .property-details {
+        flex: 1;
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .property-gallery-map {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .property-title {
+        font-size: 28px;
+        color: #333333;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .property-info {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .info-item {
+        font-size: 16px;
+        color: #555555;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        padding: 10px 15px;
+        border-radius: 10px;
+    }
+
+    .info-item i {
+        color:rgb(8, 0, 255);
+        font-size: 18px;
+    }
+
+    .property-description {
+        margin-top: 20px;
+        line-height: 1.6;
+        color: #666666;
+    }
+
+    .property-gallery {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .property-gallery img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .map-container {
+        height: 300px;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+    }
+
+    .btn-group {
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+    }
+
+    .btn-custom {
+        background-color: #FFEB3B;
+        color: black;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 25px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-custom:hover {
+        background-color: black;
+        color: #FFEB3B;
+    }
+    .sidebardisplay{
+        display: none;
+    }
+</style>
+
+<div class="property-container">
+    <!-- ستون جزئیات ملک -->
+    <div class="property-details">
+        <h2 class="property-title">{{ details.title }}</h2>
+        <div class="property-info">
+            <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <strong>موقعیت:</strong> {{ details.location }}
+            </div>
+            {% if details.price %}
+            <div class="info-item">
+                <i class="fas fa-dollar-sign"></i>
+                <strong>قیمت:</strong> {{ details.price }} میلیون تومان
+            </div>
+            {% endif %}
+            {% if details.prepayment and details.rent %}
+            <div class="info-item">
+                <i class="fas fa-hand-holding-usd"></i>
+                <strong>پیش پرداخت:</strong> {{ details.rent }} میلیون تومان
+            </div>
+            <div class="info-item">
+                <i class="fas fa-dollar-sign"></i>
+                <strong>اجاره بها:</strong> {{ details.prepayment }} میلیون تومان
+            </div>
+            {% endif %}
+            <div class="info-item">
+                <i class="fas fa-ruler-combined"></i>
+                <strong>متراژ:</strong> {{ details.area }} متر مربع
+            </div>
+            <div class="info-item">
+                <i class="fas fa-car"></i>
+                <strong>تعداد پارکینگ:</strong> {{ details.parkings }}
+            </div>
+            <div class="info-item">
+                <i class="fas fa-building"></i>
+                <strong>طبقه:</strong> {{ details.floor }}
+            </div>
+            <div class="info-item">
+                <i class="fas fa-calendar-alt"></i>
+                <strong>سال ساخت:</strong> {{ details.build_year }}
+            </div>
+        </div>
+        
+        <p class="property-description"><strong>توضیحات:</strong> {{ details.description }}</p>
+        <div class="btn-group">
+
+            <a href="{% url 'home:store-list' %}" class="btn-custom">بازگشت به لیست</a>
+            {% if not request.user.is_staff %}
+            <a href="{% url 'requests:add_to_visit_cart' 'Store' details.title %}" class="btn-custom">درخواست بازدید</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ستون گالری و نقشه -->
+    <div class="property-gallery-map">
+        <div class="property-gallery">
+            {% if details.images %}
+                <img src="{{ details.images.url }}" alt="Image 1">
+            {% endif %}
+            {% if details.image_1 %}
+                <img src="{{ details.image_1.url }}" alt="Image 2">
+            {% endif %}
+            {% if details.image_2 %}
+                <img src="{{ details.image_2.url }}" alt="Image 3">
+            {% endif %}
+            {% if details.image_3 %}
+                <img src="{{ details.image_3.url }}" alt="Image 4">
+            {% endif %}
+        </div>
+        <div class="map-container" id="map"></div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        const map = L.map('map').setView([{{ details.latitude }}, {{ details.longitude }}], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        L.marker([{{ details.latitude }}, {{ details.longitude }}])
+            .addTo(map)
+            .bindPopup('{{ details.title }}')
+            .openPopup();
+    };
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نقشه املاک</title>
+
+    <!-- استایل‌های Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- استایل‌های صفحه -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 600px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+        }
+        .property-info {
+            display: flex;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .property-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .property-image {
+            flex-shrink: 0;
+            width: 120px;
+            height: 120px;
+            margin-right: 15px;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        
+        .property-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .property-details {
+            flex: 1;
+        }
+        
+        .property-details h4 {
+            font-size: 18px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .property-details .description {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .property-details p {
+            font-size: 14px;
+            color: #333;
+            margin: 5px 0;
+        }
+        
+        .property-details p strong {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .property-details .price-info {
+            margin-top: 10px;
+            color: #333;
+        }
+        
+        .property-details .price-info p {
+            margin: 5px 0;
+        }
+        
+        .property-details .details-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .property-details .details-link:hover {
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .filter-container {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+        }
+    
+        .filter-container form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+        }
+    
+        .filter-container label {
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+        }
+    
+        .filter-container select, 
+        .filter-container input, 
+        .filter-container button {
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 48%;
+            margin-bottom: 10px;
+        }
+    
+        .filter-container select {
+            background-color: #f9f9f9;
+        }
+    
+        .filter-container input {
+            background-color: #ffffff;
+        }
+    
+        .filter-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+    
+        .filter-container button:hover {
+            background-color: #45a049;
+        }
+
+        /* موبایل */
+        @media (max-width: 768px) {
+            .filter-container form {
+                flex-direction: column;
+            }
+            
+            .filter-container select, 
+            .filter-container input, 
+            .filter-container button {
+                width: 100%;
+            }
+
+        }
+        .sidebardisplay{
+            display: none;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="filter-container">
+        <h3>فیلتر جستجو</h3>
+        <form method="get" action="" class="filter-form">
+            <!-- فیلتر نوع ملک -->
+            <label for="property-type">
+                نوع ملک:
+                <select name="type" id="property-type">
+                    <option value="">همه</option>
+                    <option value="Apartment">آپارتمان</option>
+                    <option value="Garden">باغ</option>
+                    <option value="Land">زمین</option>
+                    <option value="Villa">ویلا</option>
+                    <option value="Store">مغازه</option>
+                </select>
+            </label>
+    
+            <!-- فیلتر اجاره/فروش -->
+            <label for="sale-rent">
+                وضعیت:
+                <select name="sale_rent" id="sale-rent" onchange="toggleRentFields()">
+                    <option value="">همه</option>
+                    <option value="rent">اجاره</option>
+                    <option value="sale">فروش</option>
+                </select>
+            </label>
+    
+            <!-- فیلتر حداکثر قیمت (فقط در صورت فروش) -->
+            <label for="max-price">
+                حداکثر قیمت:
+                <input type="number" name="max_price" id="max-price" placeholder="تومان">
+            </label>
+    
+            <!-- فیلتر حداقل متراژ -->
+            <label for="min-area">
+                حداقل متراژ:
+                <input type="number" name="min_area" id="min-area" placeholder="متر مربع">
+            </label>
+
+            <!-- فیلد اجاره و پیش‌پرداخت (فقط در صورت اجاره) -->
+            <div id="rent-fields" style="display: none;">
+                <label for="max-rent">
+                    حداکثر  میزان اجاره  بها قابل پرداخت:(میلیون تومان)
+                    <input type="number" name="max_rent" id="max-rent" placeholder="تومان">
+                </label>
+                <label for="max-prepayment">
+                   حداکثر میزان پیش پرداخت (میلیون تومان):
+                    <input type="number" name="max_prepayment" id="max-prepayment" placeholder="تومان">
+                </label>
+            </div>
+    
+            <button type="submit" class="filter-btn">اعمال فیلتر</button>
+        </form>
+    </div>
+    
+    <div id="map"></div>
+
+<script>
+    // فعال یا غیر فعال کردن فیلدهای اجاره و پیش‌پرداخت
+    function toggleRentFields() {
+        const saleRentValue = document.getElementById('sale-rent').value;
+        const rentFields = document.getElementById('rent-fields');
+        
+        if (saleRentValue === 'rent') {
+            rentFields.style.display = 'block';
+        } else {
+            rentFields.style.display = 'none';
+        }
+    }
+
+    window.onload = function() {
+        toggleRentFields();  // نمایش یا عدم نمایش فیلدهای اجاره
+
+        // داده‌های املاک ارسال شده از سرور
+        const fileData = {{ file_data|safe }};
+        
+        // بررسی اینکه داده‌ها به درستی بارگذاری شده باشند
+        if (!fileData || fileData.length === 0) {
+            console.error("داده‌ها به درستی بارگذاری نشدند!");
+            return;
+        }
+
+        // گرفتن فیلترهای صفحه از URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const propertyType = urlParams.get('type');
+        const saleRent = urlParams.get('sale_rent');
+        const maxPrice = urlParams.get('max_price');
+        const minArea = urlParams.get('min_area');
+        const maxRent = urlParams.get('max_rent');
+        const maxPrepayment = urlParams.get('max_prepayment');
+
+        // فیلتر کردن داده‌ها
+        const filteredData = fileData.filter(file => {
+            const typeMatches = propertyType ? file.type.toLowerCase() === propertyType.toLowerCase() : true;
+            const saleRentMatches = saleRent ? (saleRent === 'rent' ? file.is_rent : !file.is_rent) : true;
+            const priceMatches = maxPrice ? file.price <= maxPrice : true;
+            const areaMatches = minArea ? file.area >= minArea : true;
+            const rentMatches = maxRent ? file.rent <= maxRent : true;
+            const prepaymentMatches = maxPrepayment ? file.prepayment <= maxPrepayment : true;
+
+            return typeMatches && saleRentMatches && priceMatches && areaMatches && rentMatches && prepaymentMatches;
+        });
+
+        // راه‌اندازی نقشه
+        const map = L.map('map').setView([35.6892, 51.3890], 12);
+
+        // افزودن لایه نقشه
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // افزودن مارکرها برای املاک فیلتر شده
+        filteredData.forEach(function(file) {
+            if (file.latitude && file.longitude) {
+                const marker = L.marker([file.latitude, file.longitude]).addTo(map);
+
+                const popupContent = `
+                    <div class="property-info">
+                        <div class="property-image">
+                            <img src="${file.images || 'default-placeholder.jpg'}" alt="Property Image">
+                        </div>
+                        <div class="property-details">
+                            <h4>${file.title}</h4>
+                            <p class="description">${file.description}</p>
+                            <p><strong>متراژ:</strong> ${file.area} متر</p>
+                            <div class="price-info">
+                                ${file.is_rent ? `
+                                    <p><strong>اجاره:</strong> ${file.rent ? file.rent + ' میلیون تومان' : 'اطلاعات موجود نیست'}</p>
+                                    <p><strong>پیش‌پرداخت:</strong> ${file.prepayment ? file.prepayment + ' میلیون تومان' : 'اطلاعات موجود نیست'}</p>
+                                ` : `
+                                    <p><strong>قیمت:</strong> ${file.price ? file.price + ' میلیون تومان' : 'اطلاعات موجود نیست'}</p>
+                                `}
+                            </div>
+                            <p><strong>وضعیت:</strong> ${file.is_rent ? 'اجاره' : 'فروش'}</p>
+                            <a href="${file.url}" target="_blank" class="details-link">جزئیات بیشتر</a>
+                        </div>
+                    </div>
+                `;
+                marker.bindPopup(popupContent);
+            }
+        });
+    };
+</script>
+
+</body>
+</html>
+{% endblock %}
+
+
+

@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <style>
+        .sidebardisplay{
+            display: none !important;
+        }
+
+        .request-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .actions form {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-accept {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-accept:hover {
+            background-color: #45a049;
+        }
+
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #e53935;
+        }
+
+        .btn-details {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        .btn-details:hover {
+            background-color: #007bb5;
+        }
+
+        .messages {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #000;
+            color: #FFC107;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1rem;
+            display: none;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="request-container">
+        <h1>مدیریت درخواست‌های کارشناسی</h1>
+       <div class="actions">
+            <a href="{% url 'requests:agent_expertise_requests' %}" class="btn btn-primary">درخواست‌های بازدید شما</a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>عنوان ملک</th>
+                    <th>توضیحات</th>
+                    <th>عملیات</th>
+                    <th>جزئیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                    <tr>
+                        <td>{{ request.property_title }}</td>
+                        <td>{{ request.description }}</td>
+                        <td class="actions">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="request_id" value="{{ request.id }}">
+                                <button type="submit" name="action" value="accept" class="btn btn-accept">قبول</button>
+                                <button type="submit" name="action" value="delete" class="btn btn-delete">حذف</button>
+                            </form>
+                        </td>
+                        <td>
+                            <a href="{% url 'requests:expertise_request_details' request.id %}" class="btn btn-details">مشاهده جزئیات</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- پیام‌ها -->
+        <div class="messages" id="messageBox">
+            {% include 'inc/messages.html' %}
+        </div>
+    </div>
+
+    <script>
+        function handleMessages() {
+            const messageBox = document.getElementById('messageBox');
+            
+            // Check if there's a message (using your backend logic)
+            if (messageBox && messageBox.innerHTML.trim() !== '') {
+                // Show the message box
+                messageBox.style.display = 'block';
+                
+                // Hide it after 5 seconds
+                setTimeout(() => {
+                    messageBox.style.opacity = '0'; // Fade out
+                    setTimeout(() => {
+                        messageBox.style.display = 'none'; // Remove from view after fade out
+                    }, 500); // Match fade-out duration
+                }, 1500);
+            }
+        }
+
+        // Run the function when the page loads
+        window.onload = handleMessages;
+    </script>
+</body>
+</html>
+{% endblock %}

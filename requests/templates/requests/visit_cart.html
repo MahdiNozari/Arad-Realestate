@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .sidebardisplay{
+        display: none !important;
+    }
+    body {
+        font-family: 'Vazir', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff; /* Match site background */
+        color: #333; /* Dark gray text */
+    }
+
+    h2 {
+        text-align: center;
+        color: #000; /* Black for title */
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+    }
+
+    table {
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    table th, table td {
+        padding: 12px 15px;
+        border: 1px solid #ddd; /* Subtle border for cells */
+    }
+
+    table th {
+        background-color: #FFEB3B; /* Golden-yellow header */
+        color: black; /* Black text */
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f9f9f9; /* Light gray for alternating rows */
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1; /* Slight highlight on hover */
+    }
+
+    p {
+        text-align: center;
+        font-size: 1rem;
+        color: #555; /* Soft gray for empty state message */
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-success {
+        background-color: #FFEB3B; /* Golden-yellow button */
+        color: black; /* Black text */
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: black; /* Black on hover */
+        color: #FFEB3B; /* Golden-yellow text */
+        transform: scale(1.05); /* Slight zoom effect */
+    }
+
+    .btn-danger {
+        background-color: #f44336; /* Red button for delete */
+        color: white;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #d32f2f; /* Darker red on hover */
+        transform: scale(1.05); /* Slight zoom effect */
+    }
+
+    form {
+        display: inline;
+    }
+</style>
+
+<h2>تمام درخواست‌های شما</h2>
+
+{% if requests.exists %}
+<table>
+    <thead>
+        <tr>
+            <th>عنوان ملک</th>
+            <th>تاریخ درخواست</th>
+            <th>وضعیت درخواست</th>
+            <th>پرداخت</th>
+            <th>حذف</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in requests %}
+        <tr>
+            <td>{{ request.file }}</td>
+            <td>{{ request.created_at }}</td>
+            <td>
+                {% if not request.is_paid %}
+                    <span class="text-warning">در انتظار پرداخت</span>
+                {% elif request.status == 'in_progress' %}
+                    <span class="text-info">در حال انجام</span>
+                {% elif request.status == 'completed' %}
+                    <span class="text-success">انجام شده</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if not request.is_paid %}
+                    <form action="{% url 'requests:process_payment' request.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">پرداخت</button>
+                    </form>
+                {% endif %}
+            </td>
+            <td>
+                <form action="{% url 'requests:remove_visit_request' request.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>شما هیچ درخواستی ندارید.</p>
+{% endif %}
+
+{% endblock %}

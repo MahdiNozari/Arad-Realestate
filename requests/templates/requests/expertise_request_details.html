@@ -1,0 +1,152 @@
+
+
+
+
+{% block content %}
+
+    
+    <div class="container">
+        <h1>جزئیات درخواست کارشناسی</h1>
+
+        <div class="info-row">
+            <strong>عنوان ملک:</strong>
+            <span>{{ request.property_title }}</span>
+        </div>
+
+        <div class="info-row">
+            <strong>نوع ملک:</strong>
+            <span>{{ request.property_type }}</span>
+        </div>
+
+        <div class="info-row">
+            <strong>توضیحات:</strong>
+            <span>{{ request.description }}</span>
+        </div>
+
+        <div class="info-row">
+            <strong>وضعیت:</strong>
+            <span>{{ request.status }}</span>
+        </div>
+
+        <div class="info-row">
+            <strong>هزینه کارشناسی:</strong>
+            <span>{{ request.expertise_fee }} تومان</span>
+        </div>
+
+        <div class="info-row">
+            <strong>تاریخ ایجاد:</strong>
+            <span>{{ request.created_at }}</span>
+        </div>
+
+        <div class="info-row">
+            <strong>کارشناس مربوطه:</strong>
+            <span>{% if request.expert_assigned %}{{ request.expert_assigned.name }}{% else %}ندارد{% endif %}</span>
+        </div>
+
+        <div class="info-row">
+            <strong>آیا پرداخت شده؟</strong>
+            <span class="status {% if request.is_paid %}paid{% else %}unpaid{% endif %}">
+                {% if request.is_paid %}بله{% else %}خیر{% endif %}
+            </span>
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'requests:manage_expertise_requests' %}" class="btn">بازگشت به مدیریت درخواست‌ها</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        /* استایل کلی صفحه */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* کانتینر اصلی */
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* عنوان صفحه */
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* ردیف اطلاعات */
+        .info-row {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fafafa;
+            border-radius: 8px;
+        }
+
+        .info-row strong {
+            font-size: 1.1rem;
+            color: #4CAF50;
+        }
+
+        .info-row span {
+            display: block;
+            font-size: 1rem;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        /* وضعیت پرداخت */
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .paid {
+            background-color: #4caf50;
+        }
+
+        .unpaid {
+            background-color: #ff7043;
+        }
+
+        /* دکمه‌ها */
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 25px;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            background-color: #388e3c;
+        }
+    </style>
+{% endblock %}

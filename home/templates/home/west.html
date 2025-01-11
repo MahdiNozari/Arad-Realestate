@@ -1,0 +1,202 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معرفی محله شهرک غرب تهران</title>
+    <style>
+        body {
+            font-family: 'IRANSans', Arial, sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            position: relative;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .date-card {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #2e84dc;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .date-card .day {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .date-card .year {
+            font-size: 18px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin: 20px 0;
+        }
+        h2 {
+            font-size: 20px;
+            color: #2e84dc;
+            margin-top: 20px;
+        }
+        p {
+            color: #555;
+            text-align: justify;
+        }
+        ul {
+            list-style: disc inside;
+            color: #555;
+            margin: 10px 0 10px 20px;
+        }
+        a {
+            color: #dc3545;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+        }
+        .highlight {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .image-gallery {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .image-gallery img {
+            width: 32%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="date-card">
+                <span class="day"></span>
+                <br>
+                <span class="year"></span>
+            </div>
+            <img src="{% static 'home/img/w1jpg.jpg' %}" alt="محله شهرک غرب تهران">
+        </div>
+
+        <h1>معرفی محله شهرک غرب تهران</h1>
+        <p>
+            محله شهرک غرب یکی از محله‌های شناخته‌شده و محبوب در غرب تهران است که در منطقه 5 شهرداری تهران واقع شده است. این محله به دلیل امکانات عالی، فضای سبز و نزدیکی به جاذبه‌های فرهنگی و تجاری، یکی از بهترین محله‌ها برای سکونت در تهران به شمار می‌رود. در این مقاله به معرفی بیشتر این محله پرداخته‌ایم.
+        </p>
+        
+        <h2>ویژگی‌های محله شهرک غرب</h2>
+        <p>
+            محله شهرک غرب با خیابان‌های عریض و درخت‌کاری‌شده، یکی از محله‌های آرام و لوکس تهران محسوب می‌شود. این محله به دلیل دسترسی آسان به مراکز تجاری و رفاهی، همچنین موقعیت جغرافیایی ویژه خود، بسیار محبوب است.
+        </p>
+
+        <h2>موقعیت جغرافیایی</h2>
+        <p>
+            محله شهرک غرب در غرب تهران و در مجاورت اتوبان‌های اصلی همچون اتوبان همت و اتوبان یادگار امام قرار دارد. این محله از شمال به پارک جنگلی چیتگر، از جنوب به اتوبان حکیم و از غرب به شهرک صدرا محدود می‌شود.
+        </p>
+
+        <h2>تاریخچه محله شهرک غرب</h2>
+        <p>
+            شهرک غرب از دهه ۱۳۴۰ آغاز به ساخت و توسعه شد و به‌سرعت تبدیل به یکی از مناطق پرطرفدار برای سکونت در تهران گردید. در ابتدا این محله بیشتر به عنوان یک منطقه مسکونی متوسط شناخته می‌شد، اما با گذشت زمان و افزایش توجه به توسعه شهری، به یکی از محله‌های لوکس و گران‌قیمت پایتخت تبدیل شد.
+        </p>
+
+        <h2>ویژگی‌های اجتماعی و فرهنگی</h2>
+        <p>
+            محله شهرک غرب از نظر اجتماعی، به‌ویژه در دهه‌های اخیر، به یکی از مناطقی تبدیل شده که افراد با سطح اجتماعی و اقتصادی بالا در آن سکونت دارند. این منطقه همچنین محل تجمع بسیاری از هنرمندان، ورزشکاران و مدیران اجرایی کشور است.
+        </p>
+
+        <h2>مراکز خرید و تفریحی</h2>
+        <p>
+            از ویژگی‌های برجسته محله شهرک غرب، وجود مراکز خرید و برندهای معروف است. مراکزی همچون "مرکز خرید گلستان" و "مرکز خرید فنی ایران" در این منطقه قرار دارند. همچنین برای تفریح و استراحت، پارک‌های متعددی همچون پارک شهرک غرب و پارک چیتگر در نزدیکی این محله قرار دارند.
+        </p>
+
+        <h2>نزدیکی به جاذبه‌های گردشگری</h2>
+        <p>
+            این محله در نزدیکی برخی از مهم‌ترین جاذبه‌های گردشگری تهران همچون دریاچه چیتگر، تله‌کابین توچال، و پارک ملی کوهستان‌های تهران قرار دارد.
+        </p>
+
+        <h2>تصاویر محله شهرک غرب</h2>
+        <div class="image-gallery">
+            <img src="{% static 'home/img/w3.jpg' %}" alt="نمایی از محله شهرک غرب">
+            <img src="{% static 'home/img/w2.jpg' %}" alt="خیابان‌های شهرک غرب">
+        </div>
+
+        <h2>آشنایی بیشتر با محله</h2>
+        <ul>
+            <li>شهرک غرب یکی از مناطق با امکانات رفاهی عالی و امنیت بالا است.</li>
+            <li>این محله دارای پارک‌های بزرگ و فضای سبز بی‌نظیری است که برای تفریح و ورزش مناسب است.</li>
+            <li>وجود مراکز خرید و رستوران‌های مدرن در این منطقه باعث شده است که این محله همیشه پر از زندگی و فعالیت باشد.</li>
+        </ul>
+
+    </div>
+
+    <script>
+        // تابع محاسبه تاریخ شمسی
+        function toJalali(gy, gm, gd) {
+            let g_d_m = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            let jy, jm, jd;
+            if (gy > 1600) {
+                jy = 979;
+                gy -= 1600;
+            } else {
+                jy = 0;
+                gy -= 621;
+            }
+            let gy2 = (gm > 2) ? (gy + 1) : gy;
+            let days = (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) - 80 + gd + g_d_m.slice(0, gm).reduce((a, b) => a + b, 0);
+            jy += 33 * Math.floor(days / 12053);
+            days %= 12053;
+            jy += 4 * Math.floor(days / 1461);
+            days %= 1461;
+            jy += Math.floor((days - 1) / 365);
+            if (days > 365) days = (days - 1) % 365;
+            if (days < 186) {
+                jm = 1 + Math.floor(days / 31);
+                jd = 1 + (days % 31);
+            } else {
+                jm = 7 + Math.floor((days - 186) / 30);
+                jd = 1 + ((days - 186) % 30);
+            }
+            return { jy, jm, jd };
+        }
+
+        // تنظیم تاریخ
+        const today = new Date();
+        const { jy, jm, jd } = toJalali(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+
+        document.querySelector('.day').textContent = `${jd}`;
+        document.querySelector('.year').textContent = `${months[jm - 1]} ${jy}`;
+    </script>
+</body>
+</html>

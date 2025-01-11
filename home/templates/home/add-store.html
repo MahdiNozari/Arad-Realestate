@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <link rel="stylesheet" href="C:\Users\Asus Pc\Desktop\realestate\bootstrap-v4-rtl-master\bootstrap-rtl.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>افزودن ملک</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+            .sidebardisplay{
+        display: none !important;
+    }
+        body {
+            font-family: 'Tahoma', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            direction: rtl;
+            text-align: right;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        form {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form p {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        input[type="checkbox"] {
+            margin-left: 8px;
+        }
+        
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .inline-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .inline-group label {
+            margin: 0;
+        }
+
+        .inline-group input {
+            flex: 1;
+        }
+        .container {
+        display: flex;
+        gap: 20px; /* فاصله بین آیتم‌ها */
+        justify-content: flex-start; /* چیدمان از راست به چپ */
+        align-items: center; /* تراز وسط عمودی */
+        margin: 10px 0; /* فاصله از بالا و پایین */
+    }
+
+    .inline-group {
+        display: flex;
+        align-items: center; /* تراز وسط عمودی */
+        gap: 5px; /* فاصله بین چک‌باکس و متن */
+    }
+
+    label {
+        margin: 0; /* حذف حاشیه‌های پیش‌فرض */
+    }
+    button[type="submit"]:hover {
+        background: linear-gradient(90deg, #0056b3, #003f7f);
+        transform: scale(1.02); /* Slight zoom effect */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    }
+
+    </style>
+</head>
+<body>
+    <h1>افزودن ملک جدید</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title" style="margin-bottom: 1rem;">عنوان:</label>
+            <input type="text" id="title" name="title" placeholder="عنوان ملک (مثال: آپارتمان لوکس)">
+        </div>
+
+        <div class="form-group">
+            <label for="description" style="margin-bottom: 1rem;">توضیحات:</label>
+            <textarea id="description" name="description" rows="4" placeholder="توضیحات مختصر درباره ملک"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="location" style="margin-bottom: 1rem;">مکان:</label>
+            <input type="text" id="location" name="location" placeholder="آدرس دقیق ملک">
+        </div>
+
+        <div class="inline-group">
+            <div>
+                <label for="price" style="margin-bottom: 1rem;">قیمت:</label>
+                <input type="number" id="price" name="price" placeholder="قیمت به تومان">
+            </div>
+            <div style="margin-left: 5rem;">
+                <label for="prepayment" style="margin-bottom: 1rem;" >پیش‌پرداخت:</label>
+                <input type="number" id="prepayment" name="prepayment" placeholder="پیش‌پرداخت (در صورت وجود)">
+            </div>
+        </div>
+
+        <div class="inline-group">
+            <div>
+                <label for="rent" style="margin-bottom: 1rem;">اجاره:</label>
+                <input type="number" id="rent" name="rent" placeholder="مبلغ اجاره ماهانه">
+            </div>
+            <div style="margin-left: 5rem;">
+                <label for="build_year" style="margin-bottom: 1rem;">سال ساخت:</label>
+                <input type="number" id="build_year" name="build_year" placeholder="سال ساخت ملک">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="area" style="margin-bottom: 1rem;" >مساحت:</label>
+            <input type="number" id="area" name="area" placeholder="مساحت به متر مربع">
+        </div>
+
+        <div class="form-group">
+            <label style="margin-bottom: 1rem;">ویژگی‌ها:</label>
+            <div class="container">
+                <div class="inline-group">
+                    <input type="checkbox" id="is_sale" name="is_sale">
+                    <label for="is_sale">فروش</label>
+                </div>
+                <div class="inline-group">
+                    <input type="checkbox" id="is_rent" name="is_rent">
+                    <label for="is_rent">اجاره</label>
+                </div>
+                <div class="inline-group">
+                    <input type="checkbox" id="commercial" name="commercial">
+                    <label for="commercial">تجاری</label>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="form-group">
+            <label for="images " style="margin-bottom: 1rem;">تصاویر:</label>
+            <input type="file" id="images" name="images" accept="image/*">
+        </div>
+
+        <!-- مختصات -->
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+
+        <div id="map"></div>
+
+        <button
+    type="submit" 
+    style="
+        margin-top: 1rem; 
+        font-size: 1.5rem; 
+        color: white; 
+        background: #4CAF50; 
+        border: none; 
+        padding: 12px 20px; 
+        font-weight: bold; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        transition: all 0.3s ease; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);"
+>
+    ذخیره ملک
+</button>
+
+
+    </form>
+
+    <script>
+        // تنظیمات نقشه
+        const map = L.map('map').setView([35.6892, 51.3890], 13); // پیش‌فرض: تهران
+
+        // لایه نقشه    
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker;
+
+        // وقتی روی نقشه کلیک شد
+        map.on('click', function (e) {
+            const { lat, lng } = e.latlng;
+
+            // حذف مارکر قبلی
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            // اضافه کردن مارکر جدید
+            marker = L.marker([lat, lng]).addTo(map);
+
+            // ثبت مختصات در فیلدهای مخفی
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+        });
+
+        function handleMessages() {
+        const messageBox = document.getElementById('messageBox');
+        
+        // Check if there's a message (using your backend logic)
+        if (messageBox && messageBox.innerHTML.trim() !== '') {
+            // Show the message box
+            messageBox.style.display = 'block';
+            
+            // Hide it after 5 seconds
+            setTimeout(() => {
+                messageBox.style.opacity = '0'; // Fade out
+                setTimeout(() => {
+                    messageBox.style.display = 'none'; // Remove from view after fade out
+                }, 500); // Match fade-out duration
+            }, 1500);
+        }
+    }
+        // Run the function when the page loads
+    window.onload = handleMessages;
+    </script>
+</body>
+</html>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .sidebardisplay{
+        display: none !important;
+    }
+    body {
+        font-family: 'Vazir', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff; /* Match the website background */
+    }
+
+    h2 {
+        text-align: center;
+        color: #000; /* Black for title */
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+        font-family: 'Vazir', sans-serif;
+    }
+
+    p {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #333; /* Dark gray for better readability */
+        margin: 20px 0;
+        font-family: 'Vazir', sans-serif;
+    }
+
+    .success-message {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #FFEB3B; /* Golden-yellow background */
+        color: black; /* Black text */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .success-message p {
+        margin: 0;
+    }
+</style>
+
+<div class="success-message">
+    <h2>پرداخت کارشناسی</h2>
+    <p>پرداخت شما با موفقیت انجام شد!</p>
+</div>
+{% endblock %}

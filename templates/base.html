@@ -1,0 +1,392 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>  املاک آراد  </title>
+    <link rel="stylesheet" href="https://cdn.fontcdn.ir/font/vazir/font-face.css">
+    <link href="https://cdn.fontcdn.ir/font-awesome/latest/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        /* استایل پایه */
+        body {
+            font-family: 'Vazir', sans-serif !important;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+            direction: rtl;
+        }
+
+        /* نوار ناوبری */
+        nav {
+            background-color: #000;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
+        
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FFEB3B;
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        nav .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        nav .nav-links a:hover {
+            background-color: #FFEB3B;
+            color: #000;
+        }
+
+        /* منوی کشویی */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-button {
+            background-color: #000;
+            color: #FFEB3B;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s;
+            font-family: 'Vazir', sans-serif !important;
+        }
+
+        .dropdown-button:hover {
+            background-color: #FFEB3B;
+            color: #000;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 120%;
+            left: 0;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            z-index: 1000;
+            list-style: none;
+            min-width: 200px;
+        }
+
+        .dropdown-menu li {
+            padding: 10px 20px;
+        }
+
+        .dropdown-menu li a {
+            text-decoration: cen;
+            color: #333;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown.open .dropdown-menu {
+            display: block;
+        }
+
+        /* محتوا */
+        .container {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .content {
+            flex: 3;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            
+        }
+
+        .sidebar {
+            flex: 1;
+            background: #f1f1f1;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        /* فیلترها */
+        .filters form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .filters label {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .filters input,
+        .filters select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .filters button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .filters button:hover {
+            background-color: #FFEB3B;
+            color: #000;
+        }
+        .header {
+        display: flex;
+        align-items: center; /* Align items vertically */
+        justify-content: space-between; /* Distribute space between items */
+        }
+        .content {
+    flex: 3;
+    background: linear-gradient(135deg, #f9f9f9, #ffffff);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* استایل پیام‌ها */
+.messages {
+    margin: 20px auto; /* وسط‌چین افقی */
+    padding: 15px;
+    border: 1px solid #FFC107; /* رنگ زرد روشن */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    background-color: #000000; /* پس‌زمینه مشکی */
+    color: #FFC107; /* رنگ متن زرد */
+    border-radius: 4px;
+    font-size: 0.9rem;
+    align-items: center; /* وسط‌چین عمودی */
+    justify-content: center; /* وسط‌چین افقی */
+    gap: 10px;
+    text-align: center; /* متن وسط‌چین */
+    max-width: 90%; /* محدود کردن عرض برای جلوگیری از بزرگی بیش‌ازحد */
+    display: flex;
+    align-items: center;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+}
+
+.messages .icon {
+    font-size: 1.2rem;
+    color: #FFC107; /* رنگ زرد آیکون */
+}
+
+
+/* Main Content Block Styling */
+.main-content {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+}
+.logo img {
+    width: 50px;
+    height: auto;
+    margin-left: 10px;
+}
+
+
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="header">
+            <div class="logo">
+                <img src="{% static 'home/img/logo.jpg' %}" alt="Logo" style="width: 30px; height: auto; margin-left: 10px;"> املاک آراد
+            </div>
+            <div class="nav-links" style="margin-right: 1rem;">
+                <a href="{% url 'home:home' %}">صفحه اصلی</a>
+            </div>
+        </div>
+        
+        
+        <div class="nav-links">
+            {% if not request.user.is_authenticated %}
+            <a href="{% url 'accounts:login' %}">ورود</a>
+            <a href="{% url 'accounts:register' %}">ثبت نام</a>
+            <a href="{% url 'home:about' %}">درباره ما</a>
+            {% else %}
+            {% if request.user.is_authenticated %}
+            <div class="dropdown">
+                <button class="dropdown-button" onclick="toggleDropdown()">
+                    افزودن ملک <i class="fas fa-angle-down"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li style="text-align: center !important;"><a href="{% url 'home:add-apartment' %}">آپارتمان</a></li>
+                    <li style="text-align: center !important;"><a href="{% url 'home:add-villa' %}">ویلا</a></li>
+                    <li style="text-align: center !important;"><a href="{% url 'home:add-store' %}">ملک تجاری</a></li>
+                    <li style="text-align: center !important;"><a href="{% url 'home:add-land' %}">زمین</a></li>
+                    <li style="text-align: center !important;"><a href="{% url 'home:add-garden' %}">باغ</a></li>
+                </ul>
+            </div>
+            {% if not request.user.is_staff %}
+            <a href="{% url 'requests:all_requests' %}">درخواست‌های بازدید</a>
+            <a href="{% url 'requests:user_expertise_requests' %}">درخواست های کارشناسی</a>
+            <a href="{% url 'contracts:my_contracts' %}">قراردادها</a>
+            {% endif %}
+            {% if request.user.is_staff %}
+                <a href="{% url 'contracts:agent_contracts' %}"> مدیریت قراردادها</a>
+                <a href="{% url 'requests:manage_expertise_requests' %}">مدیریت درخواست های کارشناسی</a>
+                <a href="{% url 'requests:available_visit_requests' %}">مدیریت درخواست های بازدید</a>
+            {% endif %}
+            <a href="{% url 'home:about' %}">درباره ما</a>
+            {% endif %}
+            <a href="{% url 'accounts:logout' %}">خروج</a>
+            
+            {% endif %}
+        </div>
+    </nav>
+
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="sidebar sidebardisplay">
+            <div class="filters">
+                <h3>فیلترها</h3>
+                <form method="get" action="{% url 'home:property-list' %}">
+                    <!-- نوع ملک -->
+                    <label for="property_type">نوع ملک</label>
+                    <select id="property_type" name="property_type">
+                        <option value="">همه</option>
+                        <option value="apartment" {% if request.GET.property_type == 'apartment' %}selected{% endif %}>آپارتمان</option>
+                        <option value="villa" {% if request.GET.property_type == 'villa' %}selected{% endif %}>ویلا</option>
+                        <option value="store" {% if request.GET.property_type == 'store' %}selected{% endif %}>ملک تجاری</option>
+                        <option value="garden" {% if request.GET.property_type == 'garden' %}selected{% endif %}>باغ</option>
+                        <option value="land" {% if request.GET.property_type == 'land' %}selected{% endif %}>زمین</option>
+                    </select>
+
+                    <!-- فیلترهای دیگر -->
+                    <label for="price">حداکثر قیمت</label>
+                    <input type="number" id="price" name="price" value="{{ request.GET.price }}">
+
+                    <label for="year">حداکثر سال ساخت</label>
+                    <input type="number" id="year" name="year" value="{{ request.GET.year }}">
+
+                    <label for="area">حداقل متراژ</label>
+                    <input type="number" id="area" name="area" value="{{ request.GET.area }}">
+
+                    <label for="is_rent">اجاره</label>
+                    <select id="is_rent" name="is_rent">
+                        <option value="">همه</option>
+                        <option value="true" {% if request.GET.is_rent == 'true' %}selected{% endif %}>بله</option>
+                        <option value="false" {% if request.GET.is_rent == 'false' %}selected{% endif %}>خیر</option>
+                    </select>
+
+                    <label for="is_sale">فروش</label>
+                    <select id="is_sale" name="is_sale">
+                        <option value="">همه</option>
+                        <option value="true" {% if request.GET.is_sale == 'true' %}selected{% endif %}>بله</option>
+                        <option value="false" {% if request.GET.is_sale == 'false' %}selected{% endif %}>خیر</option>
+                    </select>
+
+                    <label for="commercial">تجاری</label>
+                    <select id="commercial" name="commercial">
+                        <option value="">همه</option>
+                        <option value="true" {% if request.GET.commercial == 'true' %}selected{% endif %}>بله</option>
+                        <option value="false" {% if request.GET.commercial == 'false' %}selected{% endif %}>خیر</option>
+                    </select>
+
+                    <button type="submit">اعمال فیلترها</button>
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <!-- Styled Notification Messages -->
+            <div class="messages" id="messageBox" style="display: none;">
+                {% include 'inc/messages.html' %}
+            </div>
+            
+            <!-- Main Content Block -->
+            <div class="main-content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        };
+
+        window.addEventListener('click', function(e) {
+            const dropdown = document.querySelector('.dropdown');
+            if (!dropdown.contains(e.target)) {
+                document.querySelector('.dropdown-menu').style.display = 'none';
+            }
+        });
+        
+        // Function to show and hide the message box
+    function handleMessages() {
+        const messageBox = document.getElementById('messageBox');
+        
+        // Check if there's a message (using your backend logic)
+        if (messageBox && messageBox.innerHTML.trim() !== '') {
+            // Show the message box
+            messageBox.style.display = 'block';
+            
+            // Hide it after 5 seconds
+            setTimeout(() => {
+                messageBox.style.opacity = '0'; // Fade out
+                setTimeout(() => {
+                    messageBox.style.display = 'none'; // Remove from view after fade out
+                }, 500); // Match fade-out duration
+            }, 1500);
+        }
+    }
+    </script>
+</body>
+
+</html>

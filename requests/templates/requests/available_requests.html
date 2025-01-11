@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* استایل عمومی صفحه */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f7fc;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    .sidebardisplay{
+        display: none;
+    }
+    
+    /* استایل عنوان صفحه */
+    .page-title {
+        text-align: center;
+        font-size: 2rem;
+        color: #2c3e50;
+        margin: 30px 0;
+    }
+    
+    /* استایل دکمه‌ها */
+    .btn {
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        font-size: 1rem;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+    }
+    
+    .btn-success {
+        background-color: #28a745;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+    }
+    
+    .btn:hover {
+        opacity: 0.9;
+    }
+    
+    /* استایل قسمت actions */
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+    
+    /* استایل جعبه درخواست‌ها */
+    .request-container {
+        margin: 0 15px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* استایل جدول */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    
+    .table th {
+        background-color: #f1f1f1;
+        font-size: 1.1rem;
+        color: #555;
+    }
+    
+    .table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+    
+    .actions a {
+        margin: 0 5px;
+    }
+    </style>
+<h1 class="page-title">درخواست‌های بازدید در دسترس</h1>
+
+<div class="actions">
+    <a href="{% url 'requests:agent_visit_requests' %}" class="btn btn-primary">درخواست‌های بازدید شما</a>
+</div>
+
+<div class="request-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>کاربر</th>
+                <th>ملک</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in requests %}
+            <tr>
+                <td>{{ req.cart.user }}</td>
+                <td>{{ req.file }}</td>
+                <td>{{ req.get_status_display }}</td>
+                <td class="actions">
+                    <a href="{% url 'requests:assign_visit_request' req.id %}" class="btn btn-success">قبول</a>
+                    <a href="{% url 'requests:delete_visit_request' req.id %}" class="btn btn-danger">حذف</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+

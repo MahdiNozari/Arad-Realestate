@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Villas Listings</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .card {
+            display: block;
+            width: 200px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .card .content {
+            padding: 15px;
+        }
+        .card .title {
+            font-size: 1 rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        .card .price {
+            color: #007bff;
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+        .card .price span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        {% for villa in villas %}
+        <a href="{{ villa.get_absolute_url }}" class="card">
+            {% if villa.images %}
+            <img src="{{ villa.images.url }}" alt="{{ villa.title }}">
+            {% else %}
+                <p>there is no of this file</p>
+            {% endif %}
+            <div class="content">
+                <p class="title">{{ villa.title }}</p>
+                {% if villa.price%}
+                <p class="price">قیمت: <span>{{ villa.price }}</span>میلیون تومان</p>
+                {% else %}
+                <p class="prepayment">پیش پرداخت: <span>{{ villa.prepayment }}</span>میلیون تومان</p>
+                <p class="rent">اجاره: <span>{{ villa.rent }}</span>میلیون تومان</p>
+                {% endif %}
+                <p class="title">مکان:{{ villa.location }}</p>
+            </div>
+        </a>
+        {% empty %}
+        <p>No villa found.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
+{% endblock %}
