@@ -245,11 +245,8 @@ WSGI_APPLICATION = 'realestate.wsgi.application'
 
 DATABASES = {
     'default': {
-    
-        
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -300,8 +297,6 @@ STATICFILES_DIRS = [
 
 CASHES = {
     'defaults': {
-        
-        
     }
 }
 
@@ -323,6 +318,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'nozarikiyarash@gmail.com'
 EMAIL_HOST_PASSWORD = 'sevjozcmxihzzkrm'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-
-
