@@ -4,6 +4,7 @@ from .managers import UserManager
 from django.conf import settings
 from django.utils.timezone import now
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255)
