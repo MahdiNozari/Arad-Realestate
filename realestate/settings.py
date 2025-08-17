@@ -246,9 +246,9 @@ WSGI_APPLICATION = 'realestate.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'realestate',
-        'USER': 'postgres',
-        'PASSWORD': '687888Tehran',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
     }
 }
 
@@ -302,8 +302,7 @@ STATICFILES_DIRS = [
 
 CASHES = {
     'default': {
-        'BACKEND': 'django.core.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
+        
     }
 }
 
