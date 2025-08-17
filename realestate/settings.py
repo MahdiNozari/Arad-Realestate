@@ -245,6 +245,7 @@ WSGI_APPLICATION = 'realestate.wsgi.application'
 
 DATABASES = {
     'default': {
+    
         
     }
 }
@@ -299,6 +300,7 @@ STATICFILES_DIRS = [
 
 CASHES = {
     'defaults': {
+        
         
     }
 }
