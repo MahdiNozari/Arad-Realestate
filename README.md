@@ -254,17 +254,6 @@ DATABASES = {
    gunicorn --workers 3 realestate.wsgi:application
    ```
 
-## 📱 API Endpoints
-
-The system provides REST API endpoints for key functionality:
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/users/` | GET, POST | User management |
-| `/api/properties/` | GET, POST | Property listings |
-| `/api/contracts/` | GET, POST | Contract management |
-| `/api/requests/` | GET, POST | Property requests |
-
 ## 🤝 Contributing
 
 We welcome contributions! Please follow these steps:
