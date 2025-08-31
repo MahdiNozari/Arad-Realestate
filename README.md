@@ -294,17 +294,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Support
 
 If you encounter any problems or have questions:
-
-1. Check the [documentation](docs/) first
 2. Search existing [issues](https://github.com/MahdiNozari/Arad-Realestate/issues)
 3. Create a new issue with detailed information
 
-## 🙏 Acknowledgments
-
-- Django team for the excellent web framework
-- Bootstrap for the frontend framework
-- PostgreSQL team for the reliable database system
-- Contributors and testers
 
 ---
 
