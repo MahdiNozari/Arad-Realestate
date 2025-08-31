@@ -298,14 +298,3 @@ If you encounter any problems or have questions:
 3. Create a new issue with detailed information
 
 
----
-
-<div align="center">
-  
-<<<<<<< HEAD
-**Arad Real Estate Management System** • [Documentation](https://github.com/MahdiNozari/Arad-Realestate/wiki) • [Report Bug](https://github.com/MahdiNozari/Arad-Realestate/issues) • [Request Feature](https://github.com/MahdiNozari/Arad-Realestate/issues)
-
-</div>
-=======
-* Use a WSGI/ASGI server
->>>>>>> ddcd9bffd9c233ec4dc2d69cab33905302a6aaf7
