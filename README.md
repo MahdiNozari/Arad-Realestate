@@ -1,6 +1,4 @@
 # 🏠 Real Estate Management System
-=======
-# Real Estate Management System
 
 A comprehensive Django-based platform designed to streamline property management operations, user account management, and real estate contract handling. The system is modularly designed for scalability and maintainability.
 
