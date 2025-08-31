@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # 🏠 Real Estate Management System
+=======
+# Real Estate Management System
+>>>>>>> ddcd9bffd9c233ec4dc2d69cab33905302a6aaf7
 
 A comprehensive Django-based platform designed to streamline property management operations, user account management, and real estate contract handling. The system is modularly designed for scalability and maintainability.
 
@@ -321,6 +325,10 @@ If you encounter any problems or have questions:
 
 <div align="center">
   
+<<<<<<< HEAD
 **Arad Real Estate Management System** • [Documentation](https://github.com/MahdiNozari/Arad-Realestate/wiki) • [Report Bug](https://github.com/MahdiNozari/Arad-Realestate/issues) • [Request Feature](https://github.com/MahdiNozari/Arad-Realestate/issues)
 
 </div>
+=======
+* Use a WSGI/ASGI server
+>>>>>>> ddcd9bffd9c233ec4dc2d69cab33905302a6aaf7
