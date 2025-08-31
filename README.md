@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Real Estate Management System
 
 A Django-based Real Estate Management System designed to streamline property management, user accounts, and real estate contracts.
@@ -139,3 +140,6 @@ ALLOWED_HOSTS=localhost,127.0.0.1
   python manage.py collectstatic
   
 * Use a WSGI/ASGI server
+=======
+czczs
+>>>>>>> 76054195eac44ea01481f4b81bbfb7a81a568a0e
