@@ -570,9 +570,137 @@
             background-color: #1e7e34; /* رنگ سبز تیره‌تر هنگام کلیک */
             box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2); /* اثر فشار کلیک */
         }
-        
+            /* دکمه شناور */
+       #chatbot-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #007bff, #00c6ff);
+        color: white;
+        border-radius: 50%;
+        width: 65px;
+        height: 65px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        cursor: pointer;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+        transition: transform 0.2s ease;
+        z-index: 1000;
+    }
+    #chatbot-button:hover {
+        transform: scale(1.1);
+    }
 
-        
+    /* پنجره چت */
+    #chatbot-window {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 360px;
+        height: 480px;
+        background: #fdfdfd;
+        border-radius: 16px;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        overflow: hidden;
+        z-index: 1000;
+        font-family: 'Tahoma', sans-serif;
+    }
+
+    /* هدر */
+    #chatbot-header {
+        background: linear-gradient(135deg, #007bff, #00c6ff);
+        color: white;
+        padding: 12px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    #chatbot-header img {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    #chatbot-header span {
+        flex: 1;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    #chatbot-header button {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    /* پیام‌ها */
+    #chatbot-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background: #eef3f8;
+        font-size: 14px;
+    }
+
+    .chat-msg {
+        margin: 6px 0;
+        padding: 10px 14px;
+        border-radius: 16px;
+        max-width: 75%;
+        word-wrap: break-word;
+        animation: fadeIn 0.3s ease;
+        clear: both;
+    }
+    .chat-user {
+        background: #007bff;
+        color: white;
+        float: left;
+        border-bottom-left-radius: 4px;
+    }
+    .chat-bot {
+        background: #ffffff;
+        color: #333;
+        float: right;
+        border-bottom-right-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* بخش ورودی */
+    #chatbot-input {
+        display: flex;
+        border-top: 1px solid #ddd;
+        background: #fff;
+    }
+    #chatbot-input input {
+        flex: 1;
+        border: none;
+        padding: 12px;
+        font-size: 14px;
+        outline: none;
+    }
+    #chatbot-input button {
+        background: #007bff;
+        border: none;
+        color: white;
+        padding: 0 18px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    #chatbot-input button:hover {
+        background: #0056b3;
+    }
+
+    /* انیمیشن */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     </style>
 </head>
 <body>
@@ -826,8 +954,90 @@
             </div>
         </div>
     </div>
+    <div id="chatbot-button">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <!-- پنجره چت -->
+    <div id="chatbot-window">
+        <div id="chatbot-header">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="bot" />
+            <span>مشاور املاک هوشمند</span>
+            <button id="chatbot-close">&times;</button>
+        </div>
+        <div id="chatbot-messages"></div>
+        <div id="chatbot-input">
+            <input type="text" id="chatbot-text" placeholder="پیام خود را بنویسید...">
+            <button href="{% url 'home:chat' %}" id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
 
     <script>
+        const chatbotBtn = document.getElementById('chatbot-button');
+        const chatbotWin = document.getElementById('chatbot-window');
+        const chatbotClose = document.getElementById('chatbot-close');
+        const chatbotSend = document.getElementById('chatbot-send');
+        const chatbotText = document.getElementById('chatbot-text');
+        const chatbotMessages = document.getElementById('chatbot-messages');
+
+        chatbotBtn.addEventListener('click', () => {
+            chatbotWin.style.display = 'flex';
+        });
+
+        chatbotClose.addEventListener('click', () => {
+            chatbotWin.style.display = 'none';
+        });
+
+        chatbotSend.addEventListener('click', sendMessage);
+        chatbotText.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const text = chatbotText.value.trim();
+            if (!text) return;
+            
+            addMessage(text, 'chat-user');
+            chatbotText.value = '';
+
+            fetch('/chatbot/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({message: text})
+            })
+            .then(res => res.json())
+            .then(data => {
+                addMessage(data.reply, 'chat-bot');
+            });
+        }
+
+        function addMessage(text, cls) {
+            const div = document.createElement('div');
+            div.className = 'chat-msg ' + cls;
+            div.innerText = text;
+            chatbotMessages.appendChild(div);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        // گرفتن CSRF token برای Django
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
         // برای تبدیل سال میلادی به شمسی
         const yearSlider = document.getElementById('year');
         const yearOutput = document.getElementById('year-output');

@@ -308,3 +308,32 @@ def property_map(request):
     ]
 
     return render(request, 'home/property_map.html', {'file_data': json.dumps(file_data)})
+
+
+# views.py
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from openai import OpenAI
+from django.conf import settings
+
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
+
+@csrf_exempt
+def chatbot(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user_message = data.get("message", "")
+
+        # ارسال پیام به ChatGPT
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",   # یا مدل دیگه
+            messages=[
+                {"role": "system", "content": "شما یک مشاور املاک حرفه‌ای هستید."},
+                {"role": "user", "content": user_message}
+            ]
+        )
+
+        reply = response.choices[0].message["content"]
+        return JsonResponse({"reply": reply})
+    return JsonResponse({"error": "Invalid request"}, status=400)

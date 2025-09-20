@@ -30,4 +30,5 @@ urlpatterns=[
     path('ekbatan/',views.Ekabataniew.as_view(),name='ekbatan'),
     path('tehranpars/',views.ParsView.as_view(),name='pars'),
     path('property-map/', views.property_map, name='property-map'),
+    path("chatbot/", views.chatbot, name="chat"),
 ]
